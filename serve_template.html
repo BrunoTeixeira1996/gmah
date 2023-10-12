@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GMAH</title>
+</head>
+<body>
+
+<div class="container container-fluid position-relative ps-md-5 pe-md-5">
+
+<style>
+.item-poster{
+    position: relative;
+    overflow: hidden;
+    display: contents;
+    border-radius: 3px;
+    padding: 5px;
+    border: 1px;
+    border-style: solid;
+    border-color: #777;
+}
+code {
+  font-family: Consolas,"courier new";
+  color: crimson;
+  background-color: #f1f1f1;
+  padding: 2px;
+  font-size: 105%;
+}
+
+#content-listing .item-poster{
+    margin: 10px;
+    border-radius: 5px;
+    vertical-align: top;
+    width: 200px;
+    text-align: center;
+    border-style: solid;
+    border-color: #e5e5e5;
+}
+</style>
+
+<h3>Emails - {{.Date}}</h3>
+<div id="content-listing">
+{{range $email := .Emails}}
+  <div class="item-poster">
+    <code>{{$email.From}}</code><br>
+    {{$email.Subject}}<br>
+    <b>{{$email.Snipet}}</b><br>
+    <a href="{{$email.Link}}">Link</a><br>
+    <hr>
+    </div>
+{{end}}
+</div>
+</div>
+
+</div>
+
+</body>
+</html>
