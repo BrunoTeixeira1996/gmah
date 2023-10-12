@@ -1,7 +1,13 @@
-# Lógica
+# TODO
 
-Once per day I perform a lookup on the email using the Casas label.
-After this I create an html file and send that to me using the telegram bot.
+- [X] Mark email as read
+- [X] Create html file from email read
+- [ ] Save html files in a choosen location (flag)
+- [ ] Access all html files from the web app
+- [ ] Make request to telegram bot to send me a message with the link of the day
+- [ ] Create cron to perform lookup once per day 
+- [ ] Clean the code
+
 
 # Websites
 
