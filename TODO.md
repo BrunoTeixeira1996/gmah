@@ -2,7 +2,8 @@
 
 - [X] Mark email as read
 - [X] Create html file from email read
-- [ ] Save html files in a choosen location (flag)
+- [ ] Added flag for client_secret.json
+- [ ] Save html files in a choosen location
 - [ ] Access all html files from the web app
 - [ ] Make request to telegram bot to send me a message with the link of the day
 - [ ] Create cron to perform lookup once per day 
