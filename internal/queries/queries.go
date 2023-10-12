@@ -1,9 +1,14 @@
 package queries
 
 import (
+	"bufio"
+	"bytes"
 	"encoding/base64"
 	"fmt"
+	"os"
 	"strings"
+	"text/template"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mnako/letters"
@@ -11,21 +16,25 @@ import (
 )
 
 type MailMetadata struct {
-	// Sender is the entity that originally created and sent the message
-	Sender string
-	// From is the entity that sent the message to you (e.g. googlegroups). Most
-	// of the time this information is only relevant to mailing lists.
-	From string
-	// Subject is the email subject
+	Sender  string
+	From    string
 	Subject string
-	// Snipet is a snippet of the email body
-	Snipet string
-	// Body is the email body
-	Body string
-	// HTML is the HTML code of the email
-	HTML string
-	// Link is the link of the property
-	Link string
+	Snipet  string
+	Body    string
+	HTML    string
+	Link    string
+}
+
+type EmailTemplate struct {
+	From    string
+	Subject string
+	Snipet  string
+	Link    string
+}
+
+type Serve struct {
+	Date   string
+	Emails []*EmailTemplate
 }
 
 // Method that fills Sender, From and Subject to MailMetadata struct
@@ -128,10 +137,6 @@ func getLinkFromSource(source string, md *MailMetadata, hrefSlice *[]string) err
 	return nil
 }
 
-// TODO: The mark as read works, but now I need to make a better print statement and then
-// use that in an html template and every day I create an html file and send the file
-// from the telegram bot to me https://github.com/BrunoTeixeira1996/gbackup/blob/master/internal/email.go#L39
-
 // Func to mark message as read by removing UNREAD label
 func markAsRead(srv *gmail.Service, msg *gmail.Message) error {
 	req := &gmail.ModifyMessageRequest{
@@ -145,17 +150,69 @@ func markAsRead(srv *gmail.Service, msg *gmail.Message) error {
 	return nil
 }
 
-// Function that gets unread messages in label Casas
-func GetMessages(srv *gmail.Service) error {
-	// Get the messages metadata
-	inbox, err := srv.Users.Messages.List("me").Q("Casas is:unread").Do()
+// Func that writes a template to a HTML file
+func writeTemplateToFile(outputPath string, outTemp bytes.Buffer) error {
+	f, err := os.Create(outputPath)
+	if err != nil {
+		return err
+	}
+	w := bufio.NewWriter(f)
+	if _, err := w.WriteString(string(outTemp.Bytes())); err != nil {
+		return err
+	}
+
+	if err := w.Flush(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (e *EmailTemplate) BuildEmail(msg *MailMetadata) {
+	e.From = msg.From
+	e.Subject = msg.Subject
+	e.Snipet = msg.Snipet
+	e.Link = msg.Link
+}
+
+func CreateHTMLFile(emails []*EmailTemplate) error {
+	serve := &Serve{}
+	// FIXME: dont hardcode this
+	templ, err := template.New("serve_template.html").ParseFiles("/home/brun0/Desktop/personal/gmah/serve_template.html")
 	if err != nil {
 		return err
 	}
 
+	var outTemp bytes.Buffer
+	// This is the struct that is written in the html template
+	serve.Date = time.Now().Format("2006-01-02")
+	serve.Emails = emails
+	if err := templ.Execute(&outTemp, serve); err != nil {
+		return err
+	}
+
+	fileName := time.Now().Format("2006-01-02") + "_serve.html"
+	outputPath := "/home/brun0/Desktop/personal/gmah/" + fileName
+	if err := writeTemplateToFile(outputPath, outTemp); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Function that gets unread messages in label Casas
+func GetMessages(srv *gmail.Service) ([]*MailMetadata, error) {
+	var mailsMetadata []*MailMetadata
+
+	// Get the messages metadata
+	inbox, err := srv.Users.Messages.List("me").Q("Casas is:unread").Do()
+	if err != nil {
+		return nil, err
+	}
+
 	msgs, err := getByID(srv, inbox)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	for _, msg := range msgs {
@@ -163,26 +220,27 @@ func GetMessages(srv *gmail.Service) error {
 		md := &MailMetadata{}
 		md.getMailMetadata(msg)
 		if err := md.getMailBody(srv, msg.Id); err != nil {
-			return err
+			return nil, err
 		}
 
 		reader := strings.NewReader(md.Body)
 		email, err := letters.ParseEmail(reader)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		md.HTML = email.HTML
 
 		if err := getLinkFromSource(strings.ToLower(strings.Split(md.From, " ")[0]), md, &hrefSlice); err != nil {
-			return err
+			return nil, err
 		}
 		md.Link = hrefSlice[0]
-		fmt.Printf("------\nFrom:%s\nSubject:%s\nSnipet:%s\nLink:%s\n------\n", md.From, md.Subject, md.Snipet, md.Link)
+		mailsMetadata = append(mailsMetadata, md)
 
-		if err := markAsRead(srv, msg); err != nil {
-			return err
-		}
+		// TODO: uncomment when template works
+		// if err := markAsRead(srv, msg); err != nil {
+		// 	return nil, err
+		// }
 	}
 
-	return nil
+	return mailsMetadata, nil
 }

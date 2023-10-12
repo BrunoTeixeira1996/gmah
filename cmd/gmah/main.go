@@ -29,8 +29,24 @@ func logic() error {
 		return fmt.Errorf("Unable to retrieve Gmail client: %v", err)
 	}
 
-	_ = queries.GetMessages(srv)
+	mailsMetadata, err := queries.GetMessages(srv)
+	if err != nil {
+		return err
+	}
 
+	// Gets all emails and assigns to a new struct
+	// in order to create a new template in the future
+	emails := make([]*queries.EmailTemplate, 0)
+	for _, metadata := range mailsMetadata {
+		email := &queries.EmailTemplate{}
+		email.BuildEmail(metadata)
+		emails = append(emails, email)
+	}
+
+	// Creates an HTML file from the emails slice
+	if err := queries.CreateHTMLFile(emails); err != nil {
+		return err
+	}
 	return nil
 }
 
