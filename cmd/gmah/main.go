@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"os"
 
@@ -12,14 +13,22 @@ import (
 )
 
 func logic() error {
+	var clientSecretFlag = flag.String("client-secret", "", "-client-secret='/path/client_secret.json'")
+	var tokFileFlag = flag.String("token-file", "", "-token-fike='/path/token.json'")
+	flag.Parse()
+
+	if *clientSecretFlag == "" || *tokFileFlag == "" {
+		return fmt.Errorf("Did not provided client_secret.json or token.json")
+	}
+
 	ctx := context.Background()
-	// FIXME: add flag to client_secret.json path
-	byteFile, err := os.ReadFile("/home/brun0/Sync/gmail_tokens/client_secret.json")
+
+	byteFile, err := os.ReadFile(*clientSecretFlag)
 	if err != nil {
 		return err
 	}
 
-	client, err := auth.NewClient(byteFile)
+	client, err := auth.NewClient(byteFile, *tokFileFlag)
 	if err != nil {
 		return err
 	}

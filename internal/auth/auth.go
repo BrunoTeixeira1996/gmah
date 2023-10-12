@@ -67,13 +67,12 @@ func saveToken(path string, token *oauth2.Token) error {
 }
 
 // Retrieve a token, saves the token, then returns the generated client
-func NewClient(byteFile []byte) (*http.Client, error) {
+func NewClient(byteFile []byte, tokFile string) (*http.Client, error) {
 	config, err := configFromJSON(byteFile)
 	if err != nil {
 		return nil, fmt.Errorf("Unable to parse client secret file to config: %v", err)
 	}
 
-	tokFile := "/home/brun0/Sync/gmail_tokens/token.json"
 	tok, err := tokenFromFile(tokFile)
 
 	if err != nil {
