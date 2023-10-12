@@ -15,10 +15,11 @@ import (
 func logic() error {
 	var clientSecretFlag = flag.String("client-secret", "", "-client-secret='/path/client_secret.json'")
 	var tokFileFlag = flag.String("token-file", "", "-token-fike='/path/token.json'")
+	var dumpFlag = flag.String("dump", "", "-dump='/path/html/'")
 	flag.Parse()
 
-	if *clientSecretFlag == "" || *tokFileFlag == "" {
-		return fmt.Errorf("Did not provided client_secret.json or token.json")
+	if *clientSecretFlag == "" || *tokFileFlag == "" || *dumpFlag == "" {
+		return fmt.Errorf("Did not provided client_secret.json or token.json or the html folder to dump html files")
 	}
 
 	ctx := context.Background()
@@ -53,7 +54,7 @@ func logic() error {
 	}
 
 	// Creates an HTML file from the emails slice
-	if err := queries.CreateHTMLFile(emails); err != nil {
+	if err := queries.CreateHTMLFile(emails, *dumpFlag); err != nil {
 		return err
 	}
 	return nil

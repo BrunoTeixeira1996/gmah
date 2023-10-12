@@ -175,10 +175,9 @@ func (e *EmailTemplate) BuildEmail(msg *MailMetadata) {
 	e.Link = msg.Link
 }
 
-func CreateHTMLFile(emails []*EmailTemplate) error {
+func CreateHTMLFile(emails []*EmailTemplate, htmlLocation string) error {
 	serve := &Serve{}
-	// FIXME: dont hardcode this
-	templ, err := template.New("serve_template.html").ParseFiles("/home/brun0/Desktop/personal/gmah/serve_template.html")
+	templ, err := template.New("serve_template.html").ParseFiles("serve_template.html")
 	if err != nil {
 		return err
 	}
@@ -192,7 +191,7 @@ func CreateHTMLFile(emails []*EmailTemplate) error {
 	}
 
 	fileName := time.Now().Format("2006-01-02") + "_serve.html"
-	outputPath := "/home/brun0/Desktop/personal/gmah/" + fileName
+	outputPath := htmlLocation + fileName
 	if err := writeTemplateToFile(outputPath, outTemp); err != nil {
 		return err
 	}
