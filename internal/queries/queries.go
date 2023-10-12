@@ -177,13 +177,11 @@ func GetMessages(srv *gmail.Service) error {
 			return err
 		}
 		md.Link = hrefSlice[0]
-		//fmt.Printf("------\nFrom:%s\nSubject:%s\nSnipet:%s\nLink:%s\n------\n", md.From, md.Subject, md.Snipet, md.Link)
+		fmt.Printf("------\nFrom:%s\nSubject:%s\nSnipet:%s\nLink:%s\n------\n", md.From, md.Subject, md.Snipet, md.Link)
+
 		if err := markAsRead(srv, msg); err != nil {
 			return err
 		}
-
-		fmt.Println("marked as read")
-
 	}
 
 	return nil

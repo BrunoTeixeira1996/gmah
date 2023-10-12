@@ -73,7 +73,7 @@ func NewClient(byteFile []byte) (*http.Client, error) {
 		return nil, fmt.Errorf("Unable to parse client secret file to config: %v", err)
 	}
 
-	tokFile := "/home/brun0/Desktop/personal/gmah/token.json"
+	tokFile := "/home/brun0/Sync/gmail_tokens/token.json"
 	tok, err := tokenFromFile(tokFile)
 
 	if err != nil {

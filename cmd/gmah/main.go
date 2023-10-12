@@ -14,7 +14,7 @@ import (
 func logic() error {
 	ctx := context.Background()
 	// FIXME: add flag to client_secret.json path
-	byteFile, err := os.ReadFile("/home/brun0/Desktop/personal/gmah/client_secret.json")
+	byteFile, err := os.ReadFile("/home/brun0/Sync/gmail_tokens/client_secret.json")
 	if err != nil {
 		return err
 	}
