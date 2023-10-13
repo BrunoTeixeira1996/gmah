@@ -7,7 +7,7 @@
 - [X] Save html files in a choosen location
 - [X] Access all html files from the web app
 - [ ] Add logs
-- [ ] Make request to telegram bot to send me a message with the link of the day
+- [X] Make request to telegram bot to send me a message with the link of the day
 - [ ] Create cron to perform lookup once per day 
 - [ ] Clean the code
 
