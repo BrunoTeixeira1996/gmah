@@ -16,7 +16,6 @@ import (
 	"github.com/BrunoTeixeira1996/gmah/internal/queries"
 	"github.com/BrunoTeixeira1996/gmah/internal/requests"
 	"github.com/go-co-op/gocron"
-	cp "github.com/otiai10/copy"
 	"google.golang.org/api/gmail/v1"
 
 	"google.golang.org/api/option"
@@ -122,15 +121,7 @@ func logic() error {
 	flag.Parse()
 
 	if *gokrazyFlag {
-		// copy required folders and files to /pem
-		// TODO:
-		if errHtml := cp.Copy("/etc/gmah/html", "/perm/home/gmah/html"); errHtml != nil {
-			return errHtml
-		}
-
-		if errConfig := cp.Copy("/etc/gmah/config", "/perm/home/gmah/config"); errConfig != nil {
-			return errConfig
-		}
+		log.Println("OK lets do this on gokrazy then ...")
 	}
 
 	if *clientSecretFlag == "" || *tokFileFlag == "" || *dumpFlag == "" {
