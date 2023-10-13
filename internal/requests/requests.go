@@ -8,18 +8,23 @@ import (
 	"time"
 )
 
-func NotifyTelegramBot(newMessages string) error {
+func NotifyTelegramBot(newMessages string, isGokrazy bool) error {
+	var link string
 	url := "http://192.168.30.171:8000/gmah"
+
+	if isGokrazy {
+		link = "http://brun0-pi:9090/dump/" + time.Now().Format("2006-01-02") + "_serve.html"
+	} else {
+		link = "http://localhost:9090/dump/" + time.Now().Format("2006-01-02") + "_serve.html"
+	}
 
 	newDay := struct {
 		Date  string `json:"date"`
 		Link  string `json:"link"`
 		Count string `json:"count"`
 	}{
-		Date: time.Now().Format("2006-01-02"),
-		// FIXME: change from localhost to brun0-pi when in prod
-		//		Link:  "http://brun0-pi:9090/gmah/dump/" + time.Now().Format("2006-01-02") + "_serve.html",
-		Link:  "http://localhost:9090/dump/" + time.Now().Format("2006-01-02") + "_serve.html",
+		Date:  time.Now().Format("2006-01-02"),
+		Link:  link,
 		Count: newMessages,
 	}
 

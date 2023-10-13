@@ -24,7 +24,7 @@ import (
 
 // Cronjob to check new email
 // this executes once a day
-func getNewEmailsCronJob(clientSecret string, tokFile string, dump string, newMessages *int) {
+func getNewEmailsCronJob(clientSecret string, tokFile string, dump string, newMessages *int, isGokrazy bool) {
 	c := gocron.NewScheduler(time.UTC)
 	// c.Cron("0 0 * * *") // once per day
 	c.Cron("* * * * *").Do(func() {
@@ -33,7 +33,7 @@ func getNewEmailsCronJob(clientSecret string, tokFile string, dump string, newMe
 		}
 		newMessagesStr := strconv.Itoa(*newMessages)
 		// Notifies telegram
-		if err := requests.NotifyTelegramBot(newMessagesStr); err != nil {
+		if err := requests.NotifyTelegramBot(newMessagesStr, isGokrazy); err != nil {
 			log.Println("Error while notifying telegram bot: " + err.Error())
 		}
 	})
@@ -139,7 +139,7 @@ func logic() error {
 
 	// Cronjob to check new emails per day
 	var newMessages int
-	getNewEmailsCronJob(*clientSecretFlag, *tokFileFlag, *dumpFlag, &newMessages)
+	getNewEmailsCronJob(*clientSecretFlag, *tokFileFlag, *dumpFlag, &newMessages, *gokrazyFlag)
 
 	// Starts webserver
 	if err := startServer(*dumpFlag); err != nil {
