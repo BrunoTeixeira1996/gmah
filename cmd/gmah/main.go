@@ -8,10 +8,12 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 
 	"github.com/BrunoTeixeira1996/gmah/internal/auth"
 	"github.com/BrunoTeixeira1996/gmah/internal/handles"
 	"github.com/BrunoTeixeira1996/gmah/internal/queries"
+	"github.com/BrunoTeixeira1996/gmah/internal/requests"
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/option"
 )
@@ -49,7 +51,7 @@ func startServer(dumpFlag string) error {
 }
 
 // Func that performs all operations related to email (read and mark as read)
-func readEmails(clientSecret string, tokFile string, dumpLocation string) error {
+func readEmails(clientSecret string, tokFile string, dumpLocation string, newMessages *int) error {
 	ctx := context.Background()
 
 	byteFile, err := os.ReadFile(clientSecret)
@@ -67,7 +69,7 @@ func readEmails(clientSecret string, tokFile string, dumpLocation string) error 
 		return fmt.Errorf("Unable to retrieve Gmail client: %v", err)
 	}
 
-	mailsMetadata, err := queries.GetMessages(srv)
+	mailsMetadata, err := queries.GetMessages(srv, newMessages)
 	if err != nil {
 		return err
 	}
@@ -100,9 +102,15 @@ func logic() error {
 	}
 
 	// TODO: schedule this once per day
-	// if err := readEmails(*clientSecretFlag, *tokFileFlag, *dumpFlag); err != nil {
-	// 	return err
-	// }
+	var newMessages int
+	if err := readEmails(*clientSecretFlag, *tokFileFlag, *dumpFlag, &newMessages); err != nil {
+		return err
+	}
+
+	newMessagesStr := strconv.Itoa(newMessages)
+	if err := requests.NotifyTelegramBot(newMessagesStr); err != nil {
+		return err
+	}
 
 	if err := startServer(*dumpFlag); err != nil {
 		return err
