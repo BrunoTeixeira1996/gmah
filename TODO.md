@@ -5,7 +5,7 @@
 - [X] Added flag for client_secret.json
 - [X] Added flag for token.json
 - [X] Save html files in a choosen location
-- [ ] Access all html files from the web app
+- [X] Access all html files from the web app
 - [ ] Make request to telegram bot to send me a message with the link of the day
 - [ ] Create cron to perform lookup once per day 
 - [ ] Clean the code
