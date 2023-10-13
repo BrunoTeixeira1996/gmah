@@ -4,7 +4,9 @@ go 1.21.1
 
 require (
 	github.com/PuerkitoBio/goquery v1.8.1
+	github.com/go-co-op/gocron v1.35.2
 	github.com/mnako/letters v0.2.1
+	github.com/otiai10/copy v1.14.0
 	golang.org/x/oauth2 v0.12.0
 	google.golang.org/api v0.146.0
 )
@@ -13,7 +15,6 @@ require (
 	cloud.google.com/go/compute v1.23.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
-	github.com/go-co-op/gocron v1.35.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
@@ -25,6 +26,7 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/crypto v0.13.0 // indirect
 	golang.org/x/net v0.15.0 // indirect
+	golang.org/x/sync v0.3.0 // indirect
 	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect

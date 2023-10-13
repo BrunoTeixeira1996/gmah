@@ -16,7 +16,9 @@ import (
 	"github.com/BrunoTeixeira1996/gmah/internal/queries"
 	"github.com/BrunoTeixeira1996/gmah/internal/requests"
 	"github.com/go-co-op/gocron"
+	cp "github.com/otiai10/copy"
 	"google.golang.org/api/gmail/v1"
+
 	"google.golang.org/api/option"
 )
 
@@ -113,10 +115,23 @@ func readEmails(clientSecret string, tokFile string, dumpLocation string, newMes
 }
 
 func logic() error {
+	var gokrazyFlag = flag.Bool("gokrazy", false, "use this if you are using gokrazy")
 	var clientSecretFlag = flag.String("client-secret", "", "-client-secret='/path/client_secret.json'")
 	var tokFileFlag = flag.String("token-file", "", "-token-fike='/path/token.json'")
 	var dumpFlag = flag.String("dump", "", "-dump='/path/html/'")
 	flag.Parse()
+
+	if *gokrazyFlag {
+		// copy required folders and files to /pem
+		// TODO:
+		if errHtml := cp.Copy("/etc/gmah/html", "/perm/home/gmah/html"); errHtml != nil {
+			return errHtml
+		}
+
+		if errConfig := cp.Copy("/etc/gmah/config", "/perm/home/gmah/config"); errConfig != nil {
+			return errConfig
+		}
+	}
 
 	if *clientSecretFlag == "" || *tokFileFlag == "" || *dumpFlag == "" {
 		return fmt.Errorf("Did not provided client_secret.json or token.json or the html folder to dump html files")
