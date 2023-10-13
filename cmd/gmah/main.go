@@ -9,14 +9,34 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"time"
 
 	"github.com/BrunoTeixeira1996/gmah/internal/auth"
 	"github.com/BrunoTeixeira1996/gmah/internal/handles"
 	"github.com/BrunoTeixeira1996/gmah/internal/queries"
 	"github.com/BrunoTeixeira1996/gmah/internal/requests"
+	"github.com/go-co-op/gocron"
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/option"
 )
+
+// Cronjob to check new email
+// this executes once a day
+func getNewEmailsCronJob(clientSecret string, tokFile string, dump string, newMessages *int) {
+	c := gocron.NewScheduler(time.UTC)
+	c.Cron("* * * * *").Do(func() {
+		if err := readEmails(clientSecret, tokFile, dump, newMessages); err != nil {
+			log.Println("Error while performing the read emails inside the cronjob: " + err.Error())
+		}
+		newMessagesStr := strconv.Itoa(*newMessages)
+		// Notifies telegram
+		if err := requests.NotifyTelegramBot(newMessagesStr); err != nil {
+			log.Println("Error while notifying telegram bot: " + err.Error())
+		}
+	})
+
+	c.StartAsync()
+}
 
 func handleExit(exit chan bool) {
 	ch := make(chan os.Signal, 5)
@@ -101,17 +121,11 @@ func logic() error {
 		return fmt.Errorf("Did not provided client_secret.json or token.json or the html folder to dump html files")
 	}
 
-	// TODO: schedule this once per day
+	// Cronjob to check new emails per day
 	var newMessages int
-	if err := readEmails(*clientSecretFlag, *tokFileFlag, *dumpFlag, &newMessages); err != nil {
-		return err
-	}
+	getNewEmailsCronJob(*clientSecretFlag, *tokFileFlag, *dumpFlag, &newMessages)
 
-	newMessagesStr := strconv.Itoa(newMessages)
-	if err := requests.NotifyTelegramBot(newMessagesStr); err != nil {
-		return err
-	}
-
+	// Starts webserver
 	if err := startServer(*dumpFlag); err != nil {
 		return err
 	}
