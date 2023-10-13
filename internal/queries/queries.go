@@ -200,11 +200,8 @@ func CreateHTMLFile(emails []*EmailTemplate, htmlLocation string) error {
 }
 
 // Function that gets unread messages in label Casas
-func GetMessages(srv *gmail.Service) ([]*MailMetadata, error) {
-	var (
-		mailsMetadata []*MailMetadata
-		count         int
-	)
+func GetMessages(srv *gmail.Service, newMessages *int) ([]*MailMetadata, error) {
+	var mailsMetadata []*MailMetadata
 
 	// Get the messages metadata
 	inbox, err := srv.Users.Messages.List("me").Q("Casas is:unread").Do()
@@ -225,7 +222,7 @@ func GetMessages(srv *gmail.Service) ([]*MailMetadata, error) {
 		if err := md.getMailBody(srv, msg.Id); err != nil {
 			return nil, err
 		}
-		count += 1
+		*newMessages += 1
 
 		reader := strings.NewReader(md.Body)
 		email, err := letters.ParseEmail(reader)
@@ -240,12 +237,12 @@ func GetMessages(srv *gmail.Service) ([]*MailMetadata, error) {
 		md.Link = hrefSlice[0]
 		mailsMetadata = append(mailsMetadata, md)
 
-		// TODO: uncomment when template works
+		// comment for debug
 		if err := markAsRead(srv, msg); err != nil {
 			return nil, err
 		}
 	}
-	log.Printf("Got %d unread emails\n", count)
+	log.Printf("Got %d unread emails\n", *newMessages)
 
 	return mailsMetadata, nil
 }
