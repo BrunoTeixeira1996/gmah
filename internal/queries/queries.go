@@ -177,6 +177,9 @@ func (e *EmailTemplate) BuildEmail(msg *MailMetadata) {
 
 func CreateHTMLFile(emails []*EmailTemplate, htmlLocation string) error {
 	serve := &Serve{}
+	// FIXME: This is breaking gokrazy conf
+	// 2023/10/13 17:03:25 Error while performing the read emails inside the cronjob: open serve_template.html: no such file or directory
+	// I need to use /etc/gmah/serve_template.html
 	templ, err := template.New("serve_template.html").ParseFiles("serve_template.html")
 	if err != nil {
 		return err
