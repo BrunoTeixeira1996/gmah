@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"text/template"
@@ -119,7 +120,6 @@ func extractLinks(md *MailMetadata, hrefLink string, hrefSlice *[]string) error 
 
 // Function that returns link depending on the source (supercasa, idealista, etc)
 func getLinkFromSource(source string, md *MailMetadata, hrefSlice *[]string) error {
-
 	switch source {
 	case "idealista":
 		if err := extractLinks(md, "imovel", hrefSlice); err != nil {
@@ -201,13 +201,17 @@ func CreateHTMLFile(emails []*EmailTemplate, htmlLocation string) error {
 
 // Function that gets unread messages in label Casas
 func GetMessages(srv *gmail.Service) ([]*MailMetadata, error) {
-	var mailsMetadata []*MailMetadata
+	var (
+		mailsMetadata []*MailMetadata
+		count         int
+	)
 
 	// Get the messages metadata
 	inbox, err := srv.Users.Messages.List("me").Q("Casas is:unread").Do()
 	if err != nil {
 		return nil, err
 	}
+	log.Println("Got new unread messages")
 
 	msgs, err := getByID(srv, inbox)
 	if err != nil {
@@ -221,6 +225,7 @@ func GetMessages(srv *gmail.Service) ([]*MailMetadata, error) {
 		if err := md.getMailBody(srv, msg.Id); err != nil {
 			return nil, err
 		}
+		count += 1
 
 		reader := strings.NewReader(md.Body)
 		email, err := letters.ParseEmail(reader)
@@ -236,10 +241,11 @@ func GetMessages(srv *gmail.Service) ([]*MailMetadata, error) {
 		mailsMetadata = append(mailsMetadata, md)
 
 		// TODO: uncomment when template works
-		// if err := markAsRead(srv, msg); err != nil {
-		// 	return nil, err
-		// }
+		if err := markAsRead(srv, msg); err != nil {
+			return nil, err
+		}
 	}
+	log.Printf("Got %d unread emails\n", count)
 
 	return mailsMetadata, nil
 }

@@ -4,32 +4,60 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
+	"net/http"
 	"os"
+	"os/signal"
 
 	"github.com/BrunoTeixeira1996/gmah/internal/auth"
+	"github.com/BrunoTeixeira1996/gmah/internal/handles"
 	"github.com/BrunoTeixeira1996/gmah/internal/queries"
-	gmail "google.golang.org/api/gmail/v1"
+	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/option"
 )
 
-func logic() error {
-	var clientSecretFlag = flag.String("client-secret", "", "-client-secret='/path/client_secret.json'")
-	var tokFileFlag = flag.String("token-file", "", "-token-fike='/path/token.json'")
-	var dumpFlag = flag.String("dump", "", "-dump='/path/html/'")
-	flag.Parse()
+func handleExit(exit chan bool) {
+	ch := make(chan os.Signal, 5)
+	signal.Notify(ch, os.Interrupt)
+	<-ch
+	log.Println("Closing web server")
+	exit <- true
+}
 
-	if *clientSecretFlag == "" || *tokFileFlag == "" || *dumpFlag == "" {
-		return fmt.Errorf("Did not provided client_secret.json or token.json or the html folder to dump html files")
-	}
+func startServer(dumpFlag string) error {
+	// HTTP Server
+	// Handle exit
+	exit := make(chan bool)
+	go handleExit(exit)
 
+	mux := http.NewServeMux()
+
+	fs := http.FileServer(http.Dir(dumpFlag))
+	mux.Handle("/dump/", http.StripPrefix("/dump/", fs))
+	mux.HandleFunc("/", handles.IndexHandle)
+
+	go func() {
+		if err := http.ListenAndServe(":9090", mux); err != nil && err != http.ErrServerClosed {
+			panic("Error trying to start http server: " + err.Error())
+		}
+	}()
+
+	log.Println("Serving at :9090")
+	<-exit
+
+	return nil
+}
+
+// Func that performs all operations related to email (read and mark as read)
+func readEmails(clientSecret string, tokFile string, dumpLocation string) error {
 	ctx := context.Background()
 
-	byteFile, err := os.ReadFile(*clientSecretFlag)
+	byteFile, err := os.ReadFile(clientSecret)
 	if err != nil {
 		return err
 	}
 
-	client, err := auth.NewClient(byteFile, *tokFileFlag)
+	client, err := auth.NewClient(byteFile, tokFile)
 	if err != nil {
 		return err
 	}
@@ -54,9 +82,32 @@ func logic() error {
 	}
 
 	// Creates an HTML file from the emails slice
-	if err := queries.CreateHTMLFile(emails, *dumpFlag); err != nil {
+	if err := queries.CreateHTMLFile(emails, dumpLocation); err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func logic() error {
+	var clientSecretFlag = flag.String("client-secret", "", "-client-secret='/path/client_secret.json'")
+	var tokFileFlag = flag.String("token-file", "", "-token-fike='/path/token.json'")
+	var dumpFlag = flag.String("dump", "", "-dump='/path/html/'")
+	flag.Parse()
+
+	if *clientSecretFlag == "" || *tokFileFlag == "" || *dumpFlag == "" {
+		return fmt.Errorf("Did not provided client_secret.json or token.json or the html folder to dump html files")
+	}
+
+	// TODO: schedule this once per day
+	// if err := readEmails(*clientSecretFlag, *tokFileFlag, *dumpFlag); err != nil {
+	// 	return err
+	// }
+
+	if err := startServer(*dumpFlag); err != nil {
+		return err
+	}
+
 	return nil
 }
 
