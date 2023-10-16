@@ -27,7 +27,7 @@ func getNewEmailsCronJob(clientSecret string, tokFile string, dump string, newMe
 	c := gocron.NewScheduler(time.UTC)
 	// c.Cron("0 0 * * *") // once per day
 	c.Cron("* * * * *").Do(func() {
-		if err := readEmails(clientSecret, tokFile, dump, newMessages); err != nil {
+		if err := readEmails(clientSecret, tokFile, dump, newMessages, isGokrazy); err != nil {
 			log.Println("Error while performing the read emails inside the cronjob: " + err.Error())
 		}
 		newMessagesStr := strconv.Itoa(*newMessages)
@@ -73,7 +73,7 @@ func startServer(dumpFlag string) error {
 }
 
 // Func that performs all operations related to email (read and mark as read)
-func readEmails(clientSecret string, tokFile string, dumpLocation string, newMessages *int) error {
+func readEmails(clientSecret string, tokFile string, dumpLocation string, newMessages *int, isGokrazy bool) error {
 	ctx := context.Background()
 
 	byteFile, err := os.ReadFile(clientSecret)
@@ -106,7 +106,7 @@ func readEmails(clientSecret string, tokFile string, dumpLocation string, newMes
 	}
 
 	// Creates an HTML file from the emails slice
-	if err := queries.CreateHTMLFile(emails, dumpLocation); err != nil {
+	if err := queries.CreateHTMLFile(emails, dumpLocation, isGokrazy); err != nil {
 		return err
 	}
 
