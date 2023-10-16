@@ -180,11 +180,11 @@ func CreateHTMLFile(emails []*EmailTemplate, htmlLocation string, isGokrazy bool
 	// FIXME: This is breaking gokrazy conf
 	// 2023/10/13 17:03:25 Error while performing the read emails inside the cronjob: open serve_template.html: no such file or directory
 	// I need to use /etc/gmah/serve_template.html
-	tmpl := "server_template.html"
+	tmpl := "serve_template.html"
 	if isGokrazy {
 		tmpl = "/etc/gmah/serve_template.html"
 	}
-	templ, err := template.New("server_template.html").ParseFiles(tmpl)
+	templ, err := template.New("serve_template.html").ParseFiles(tmpl)
 	if err != nil {
 		return err
 	}
