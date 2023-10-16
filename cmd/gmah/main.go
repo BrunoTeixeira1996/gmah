@@ -124,13 +124,13 @@ func logic() error {
 	if *gokrazyFlag {
 		log.Println("OK lets do this on gokrazy then ...")
 		// copy required folders to /pem
-		errSecret := cp.Copy("/etc/gmah/client_secret.json", "/perm/home/gmah/")
-		errToken := cp.Copy("/etc/gmah/token.json", "/perm/home/gmah/")
+		// errSecret := cp.Copy("/etc/gmah/client_secret.json", "/perm/home/gmah/")
+		// errToken := cp.Copy("/etc/gmah/token.json", "/perm/home/gmah/")
 		errTemplate := cp.Copy("/etc/gmah/serve_template.html", "/perm/home/gmah/")
-		errHtml := cp.Copy("/etc/gmah/html", "/perm/home/gmah/html/")
+		errHtml := cp.Copy("/etc/gmah/html", "/perm/home/gmah/")
 
-		if errSecret != nil || errToken != nil || errTemplate != nil || errHtml != nil {
-			return fmt.Errorf("Error while copying files and folders to gokrazy perm (secret:%v),(token:%v),(template:%v),(html:%v)", errSecret, errToken, errTemplate, errHtml)
+		if errTemplate != nil || errHtml != nil {
+			return fmt.Errorf("Error while copying files and folders to gokrazy perm (template:%v),(html:%v)", errTemplate, errHtml)
 		}
 	}
 
