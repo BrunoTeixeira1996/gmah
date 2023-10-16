@@ -184,7 +184,7 @@ func CreateHTMLFile(emails []*EmailTemplate, htmlLocation string, isGokrazy bool
 	if isGokrazy {
 		tmpl = "/etc/gmah/serve_template.html"
 	}
-	templ, err := template.New(tmpl).ParseFiles(tmpl)
+	templ, err := template.New("server_template.html").ParseFiles(tmpl)
 	if err != nil {
 		return err
 	}
