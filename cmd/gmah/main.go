@@ -130,7 +130,7 @@ func logic() error {
 		errHtml := cp.Copy("/etc/gmah/html", "/perm/home/gmah/html/")
 
 		if errSecret != nil || errToken != nil || errTemplate != nil || errHtml != nil {
-			return fmt.Errorf("Error while copying files and folders to gokrazy perm")
+			return fmt.Errorf("Error while copying files and folders to gokrazy perm (secret:%v),(token:%v),(template:%v),(html:%v)", errSecret, errToken, errTemplate, errHtml)
 		}
 	}
 
