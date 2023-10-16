@@ -180,7 +180,7 @@ func CreateHTMLFile(emails []*EmailTemplate, htmlLocation string, isGokrazy bool
 	// FIXME: This is breaking gokrazy conf
 	tmpl := "serve_template.html"
 	if isGokrazy {
-		tmpl = "/perm/gmah/serve_template.html"
+		tmpl = "/perm/home/gmah/serve_template.html"
 	}
 	templ, err := template.New("serve_template.html").ParseFiles(tmpl)
 	if err != nil {
