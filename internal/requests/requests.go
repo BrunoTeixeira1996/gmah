@@ -13,7 +13,7 @@ func NotifyTelegramBot(newMessages string, isGokrazy bool) error {
 	url := "http://192.168.30.171:8000/gmah"
 
 	if isGokrazy {
-		link = "http://brun0-pi:9090/dump/" + time.Now().Format("2006-01-02") + "_serve.html"
+		link = "http://192.168.30.12:9090/dump/" + time.Now().Format("2006-01-02") + "_serve.html"
 	} else {
 		link = "http://localhost:9090/dump/" + time.Now().Format("2006-01-02") + "_serve.html"
 	}
