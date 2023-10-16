@@ -26,8 +26,8 @@ import (
 // this executes once a day
 func getNewEmailsCronJob(clientSecret string, tokFile string, dump string, newMessages *int, isGokrazy bool) {
 	c := gocron.NewScheduler(time.UTC)
-	// c.Cron("0 0 * * *") // once per day
-	c.Cron("* * * * *").Do(func() {
+	// c.Cron("* * * * *") // every minute
+	c.Cron("0 0 * * *").Do(func() {
 		if err := readEmails(clientSecret, tokFile, dump, newMessages, isGokrazy); err != nil {
 			log.Println("Error while performing the read emails inside the cronjob: " + err.Error())
 		}
