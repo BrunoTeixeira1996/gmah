@@ -4,6 +4,8 @@ go 1.21.1
 
 require (
 	github.com/PuerkitoBio/goquery v1.8.1
+	github.com/emersion/go-imap v1.2.1
+	github.com/emersion/go-message v0.17.0
 	github.com/go-co-op/gocron v1.35.2
 	github.com/mnako/letters v0.2.1
 	github.com/otiai10/copy v1.14.0
@@ -15,6 +17,8 @@ require (
 	cloud.google.com/go/compute v1.23.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
+	github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21 // indirect
+	github.com/emersion/go-textwrapper v0.0.0-20200911093747-65d896831594 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect

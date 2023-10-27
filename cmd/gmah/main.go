@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -11,26 +10,34 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/BrunoTeixeira1996/gmah/internal/auth"
+	"github.com/BrunoTeixeira1996/gmah/internal/email"
 	"github.com/BrunoTeixeira1996/gmah/internal/handles"
-	"github.com/BrunoTeixeira1996/gmah/internal/queries"
 	"github.com/BrunoTeixeira1996/gmah/internal/requests"
+	"github.com/BrunoTeixeira1996/gmah/internal/serve"
 	"github.com/go-co-op/gocron"
-	"google.golang.org/api/gmail/v1"
 
 	cp "github.com/otiai10/copy"
-	"google.golang.org/api/option"
 )
 
 // Cronjob to check new email
 // this executes once a day
-func getNewEmailsCronJob(clientSecret string, tokFile string, dump string, newMessages *int, isGokrazy bool) {
+func getNewEmailsCronJob(emailFlag string, passwordFlag string, dump string, newMessages *int, isGokrazy bool) {
 	c := gocron.NewScheduler(time.UTC)
 	// c.Cron("* * * * *") // every minute
-	c.Cron("0 17 * * *").Do(func() {
-		if err := readEmails(clientSecret, tokFile, dump, newMessages, isGokrazy); err != nil {
-			log.Println("Error while performing the read emails inside the cronjob: " + err.Error())
+	c.Cron("* * * * *").Do(func() {
+		var (
+			emails []email.EmailTemplate
+			err    error
+		)
+
+		if emails, err = email.ReadEmails(emailFlag, passwordFlag); err != nil {
+			log.Println("Error while performing the read emails inside the cronjob: ", err.Error())
 		}
+
+		if err = serve.CreateHTMLFile(emails, dump, isGokrazy); err != nil {
+			log.Println("Error while creating html file: ", err.Error())
+		}
+
 		newMessagesStr := strconv.Itoa(*newMessages)
 		// Notifies telegram
 		if err := requests.NotifyTelegramBot(newMessagesStr, isGokrazy); err != nil {
@@ -50,8 +57,6 @@ func handleExit(exit chan bool) {
 }
 
 func startServer(dumpFlag string) error {
-	// HTTP Server
-	// Handle exit
 	exit := make(chan bool)
 	go handleExit(exit)
 
@@ -73,53 +78,16 @@ func startServer(dumpFlag string) error {
 	return nil
 }
 
-// Func that performs all operations related to email (read and mark as read)
-func readEmails(clientSecret string, tokFile string, dumpLocation string, newMessages *int, isGokrazy bool) error {
-	ctx := context.Background()
-
-	byteFile, err := os.ReadFile(clientSecret)
-	if err != nil {
-		return err
-	}
-
-	client, err := auth.NewClient(byteFile, tokFile)
-	if err != nil {
-		return err
-	}
-
-	srv, err := gmail.NewService(ctx, option.WithHTTPClient(client))
-	if err != nil {
-		return fmt.Errorf("Unable to retrieve Gmail client: %v", err)
-	}
-
-	mailsMetadata, err := queries.GetMessages(srv, newMessages)
-	if err != nil {
-		return err
-	}
-
-	// Gets all emails and assigns to a new struct
-	// in order to create a new template in the future
-	emails := make([]*queries.EmailTemplate, 0)
-	for _, metadata := range mailsMetadata {
-		email := &queries.EmailTemplate{}
-		email.BuildEmail(metadata)
-		emails = append(emails, email)
-	}
-
-	// Creates an HTML file from the emails slice
-	if err := queries.CreateHTMLFile(emails, dumpLocation, isGokrazy); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func logic() error {
+	var emailFlag = flag.String("email", "", "-email='youremail@mail.com'")
+	var passwordFlag = flag.String("password", "", "-password='yourpassword'")
 	var gokrazyFlag = flag.Bool("gokrazy", false, "use this if you are using gokrazy")
-	var clientSecretFlag = flag.String("client-secret", "", "-client-secret='/path/client_secret.json'")
-	var tokFileFlag = flag.String("token-file", "", "-token-fike='/path/token.json'")
 	var dumpFlag = flag.String("dump", "", "-dump='/path/html/'")
 	flag.Parse()
+
+	if *emailFlag == "" || *passwordFlag == "" {
+		return fmt.Errorf("Please provide the email and password")
+	}
 
 	if *gokrazyFlag {
 		log.Println("OK lets do this on gokrazy then ...")
@@ -132,13 +100,9 @@ func logic() error {
 		}
 	}
 
-	if *clientSecretFlag == "" || *tokFileFlag == "" || *dumpFlag == "" {
-		return fmt.Errorf("Did not provided client_secret.json or token.json or the html folder to dump html files")
-	}
-
 	// Cronjob to check new emails per day
 	var newMessages int
-	getNewEmailsCronJob(*clientSecretFlag, *tokFileFlag, *dumpFlag, &newMessages, *gokrazyFlag)
+	getNewEmailsCronJob(*emailFlag, *passwordFlag, *dumpFlag, &newMessages, *gokrazyFlag)
 
 	// Starts webserver
 	if err := startServer(*dumpFlag); err != nil {
