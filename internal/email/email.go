@@ -68,10 +68,11 @@ func getLinkFromSource(source string, html string, hrefSlice *[]string) error {
 
 // Function that generates the final slice to place inside the HTML template
 // FIXME : Get Snipet
-func buildEmail(messages chan *imap.Message, section *imap.BodySectionName) ([]EmailTemplate, error) {
+func buildEmail(messages chan *imap.Message, section *imap.BodySectionName, newMessages *int) ([]EmailTemplate, error) {
 	var emails []EmailTemplate
 
 	for message := range messages {
+		*(newMessages) += 1
 		var hrefSlice []string
 
 		if message == nil {
@@ -125,7 +126,7 @@ func buildEmail(messages chan *imap.Message, section *imap.BodySectionName) ([]E
 }
 
 // Main function that performs all the necessary logic to read and build emails
-func ReadEmails(email string, password string) ([]EmailTemplate, error) {
+func ReadEmails(email string, password string, newMessages *int) ([]EmailTemplate, error) {
 	c, err := initClient()
 	if err != nil {
 		return []EmailTemplate{}, err
@@ -168,7 +169,7 @@ func ReadEmails(email string, password string) ([]EmailTemplate, error) {
 		}
 	}()
 
-	emails, err := buildEmail(messages, section)
+	emails, err := buildEmail(messages, section, newMessages)
 	if err != nil {
 		return []EmailTemplate{}, err
 	}

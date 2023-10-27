@@ -26,11 +26,12 @@ func getNewEmailsCronJob(emailFlag string, passwordFlag string, dump string, new
 	// c.Cron("* * * * *") // every minute
 	c.Cron("* * * * *").Do(func() {
 		var (
-			emails []email.EmailTemplate
-			err    error
+			emails      []email.EmailTemplate
+			newMessages int
+			err         error
 		)
 
-		if emails, err = email.ReadEmails(emailFlag, passwordFlag); err != nil {
+		if emails, err = email.ReadEmails(emailFlag, passwordFlag, &newMessages); err != nil {
 			log.Println("Error while performing the read emails inside the cronjob: ", err.Error())
 		}
 
@@ -38,7 +39,9 @@ func getNewEmailsCronJob(emailFlag string, passwordFlag string, dump string, new
 			log.Println("Error while creating html file: ", err.Error())
 		}
 
-		newMessagesStr := strconv.Itoa(*newMessages)
+		newMessagesStr := strconv.Itoa(newMessages)
+		log.Printf("Got %s new messages\n", newMessagesStr)
+
 		// Notifies telegram
 		if err := requests.NotifyTelegramBot(newMessagesStr, isGokrazy); err != nil {
 			log.Println("Error while notifying telegram bot: " + err.Error())
