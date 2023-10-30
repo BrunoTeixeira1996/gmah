@@ -92,6 +92,7 @@ func logic() error {
 	var passwordFlag = flag.String("password", "", "-password='yourpassword'")
 	var gokrazyFlag = flag.Bool("gokrazy", false, "use this if you are using gokrazy")
 	var dumpFlag = flag.String("dump", "", "-dump='/path/html/'")
+	var isDebugFlag = flag.Bool("debug", false, "use this if in debug mode")
 	flag.Parse()
 
 	if *emailFlag == "" || *passwordFlag == "" {
@@ -111,8 +112,11 @@ func logic() error {
 
 	// Cronjob to check new emails per day
 	var newMessages int
-	getNewEmailsCronJob(*emailFlag, *passwordFlag, *dumpFlag, &newMessages, *gokrazyFlag)
-	//getNewEmails(*emailFlag, *passwordFlag, *dumpFlag, &newMessages, *gokrazyFlag) // debug
+	if *isDebugFlag {
+		getNewEmails(*emailFlag, *passwordFlag, *dumpFlag, &newMessages, *gokrazyFlag)
+	} else {
+		getNewEmailsCronJob(*emailFlag, *passwordFlag, *dumpFlag, &newMessages, *gokrazyFlag)
+	}
 
 	// Starts webserver
 	if err := startServer(*dumpFlag); err != nil {
