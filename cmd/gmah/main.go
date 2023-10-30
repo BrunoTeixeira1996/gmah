@@ -51,6 +51,12 @@ func getNewEmailsCronJob(emailFlag string, passwordFlag string, dump string, new
 	c.StartAsync()
 }
 
+func getNewEmails(emailFlag string, passwordFlag string, dump string, newMessages *int, isGokrazy bool) {
+	if _, err := email.ReadEmails(emailFlag, passwordFlag, newMessages); err != nil {
+		log.Println("Error while performing the read emails inside the cronjob: ", err.Error())
+	}
+}
+
 func handleExit(exit chan bool) {
 	ch := make(chan os.Signal, 5)
 	signal.Notify(ch, os.Interrupt)
@@ -106,6 +112,7 @@ func logic() error {
 	// Cronjob to check new emails per day
 	var newMessages int
 	getNewEmailsCronJob(*emailFlag, *passwordFlag, *dumpFlag, &newMessages, *gokrazyFlag)
+	//getNewEmails(*emailFlag, *passwordFlag, *dumpFlag, &newMessages, *gokrazyFlag) // debug
 
 	// Starts webserver
 	if err := startServer(*dumpFlag); err != nil {
