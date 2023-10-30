@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"regexp"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -15,7 +16,7 @@ import (
 type EmailTemplate struct {
 	From    string
 	Subject string
-	Snipet  string
+	Snippet string
 	Link    string
 }
 
@@ -66,10 +67,57 @@ func getLinkFromSource(source string, html string, hrefSlice *[]string) error {
 	return nil
 }
 
+// Function that extracts the snippet from the HTML itself
+func extractSnippet(html string, startCut string, finalCut string, tag string, source string) (string, error) {
+	var cleanedString string
+
+	sc := strings.Split(html, startCut)
+	fc := strings.Split(sc[1], finalCut)
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(fc[0]))
+	if err != nil {
+		return "", err
+	}
+	output := doc.Find(tag).Text()
+
+	switch source {
+	case "idealista":
+		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(strings.Split(output, "€")[0], "")) + "€"
+	case "SUPERCASA":
+		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(output, ""))
+	}
+
+	if cleanedString == "" {
+		return "", fmt.Errorf("Error while cleaning the string, looks like its empty")
+	}
+
+	return cleanedString, nil
+}
+
+// Function that returns a small snippet about the email
+func getSnippetFromSource(source string, html string, snippet *string) error {
+	var err error
+	switch source {
+	case "idealista":
+		*snippet, err = extractSnippet(html, "<!-- preheader - description mail -->", "<!-- header -->", "span", source)
+		if err != nil {
+			return err
+		}
+	case "SUPERCASA":
+		*snippet, err = extractSnippet(html, "<!-- Pre-header -->", "<!-- End region Pre-header -->", "div", source)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 // Function that generates the final slice to place inside the HTML template
-// FIXME : Get Snipet
 func buildEmail(messages chan *imap.Message, section *imap.BodySectionName, newMessages *int) ([]EmailTemplate, error) {
-	var emails []EmailTemplate
+	var (
+		emails  []EmailTemplate
+		snippet string
+	)
 
 	for message := range messages {
 		*(newMessages) += 1
@@ -117,6 +165,12 @@ func buildEmail(messages chan *imap.Message, section *imap.BodySectionName, newM
 			}
 
 			email.Link = hrefSlice[0]
+
+			if err := getSnippetFromSource(email.From, string(b), &snippet); err != nil {
+				log.Printf("Error while getting Snippet in %s : %v\n", email.From, err)
+			} else {
+				email.Snippet = snippet
+			}
 		}
 
 		emails = append(emails, email)
