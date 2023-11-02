@@ -24,7 +24,7 @@ import (
 func getNewEmailsCronJob(emailFlag string, passwordFlag string, dump string, newMessages *int, isGokrazy bool) {
 	c := gocron.NewScheduler(time.UTC)
 	// c.Cron("* * * * *") // every minute
-	c.Cron("0 17 * * *").Do(func() {
+	c.Cron("20 17 * * *").Do(func() {
 		var (
 			emails      []email.EmailTemplate
 			newMessages int
