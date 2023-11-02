@@ -218,28 +218,16 @@ func ReadEmails(email string, password string, newMessages *int) ([]EmailTemplat
 
 	// Fetch all messages unread that are inside Casas label
 	var emails []EmailTemplate
-	c1 := make(chan error)
-	c2 := make(chan string)
+	//isErr := false
 	go func() {
 		if err = c.Fetch(seqset, items, messages); err != nil {
-			if err.Error() == "Could not parse command" {
-				c1 <- fmt.Errorf("Could not parse command, meaning there are no new emails to read")
-			}
-		} else {
-			c2 <- "Working"
+			log.Println("Fetch err:", err)
 		}
 	}()
 
-	select {
-	// This case means there's no new emails to read
-	case msgErr := <-c1:
-		return []EmailTemplate{}, msgErr
-	// This case means there are new emails to read
-	case <-c2:
-		emails, err = buildEmail(messages, section, newMessages)
-		if err != nil {
-			return []EmailTemplate{}, err
-		}
+	emails, err = buildEmail(messages, section, newMessages)
+	if err != nil {
+		return []EmailTemplate{}, err
 	}
 
 	return emails, err

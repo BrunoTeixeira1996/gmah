@@ -31,13 +31,19 @@ func getNewEmailsCronJob(emailFlag string, passwordFlag string, dump string, new
 			err         error
 		)
 
+		log.Printf("Executing cronjob %s ...\n", time.Now().String())
+
 		if emails, err = email.ReadEmails(emailFlag, passwordFlag, &newMessages); err != nil {
 			log.Println("Error while performing the read emails inside the cronjob: ", err.Error())
 		}
 
+		log.Println("ReadEmails output err:", err)
+
 		if err = serve.CreateHTMLFile(emails, dump, isGokrazy); err != nil {
 			log.Println("Error while creating html file: ", err.Error())
 		}
+
+		log.Println("CreateHTMLFile output err:", err)
 
 		newMessagesStr := strconv.Itoa(newMessages)
 		log.Printf("Got %s new messages\n", newMessagesStr)
@@ -46,6 +52,10 @@ func getNewEmailsCronJob(emailFlag string, passwordFlag string, dump string, new
 		if err := requests.NotifyTelegramBot(newMessagesStr, isGokrazy); err != nil {
 			log.Println("Error while notifying telegram bot: " + err.Error())
 		}
+
+		log.Println("NotifyTelegramBot output err:", err)
+
+		log.Printf("Finished cronjob %s\n", time.Now().String())
 	})
 
 	c.StartAsync()
