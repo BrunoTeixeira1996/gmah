@@ -14,51 +14,41 @@ import (
 	"github.com/BrunoTeixeira1996/gmah/internal/handles"
 	"github.com/BrunoTeixeira1996/gmah/internal/requests"
 	"github.com/BrunoTeixeira1996/gmah/internal/serve"
-	"github.com/go-co-op/gocron"
 
 	cp "github.com/otiai10/copy"
 )
 
-// Cronjob to check new email
-// this executes once a day
-func getNewEmailsCronJob(emailFlag string, passwordFlag string, dump string, newMessages *int, isGokrazy bool) {
-	c := gocron.NewScheduler(time.UTC)
-	// c.Cron("* * * * *") // every minute
-	c.Cron("0 18 * * *").Do(func() {
-		var (
-			emails      []email.EmailTemplate
-			newMessages int
-			err         error
-		)
+func run(emailFlag string, passwordFlag string, dump string, newMessages *int, isGokrazy bool) {
+	var (
+		emails []email.EmailTemplate
+		err    error
+	)
 
-		log.Printf("Executing cronjob %s ...\n", time.Now().String())
+	log.Printf("Executing cronjob %s ...\n", time.Now().String())
 
-		if emails, err = email.ReadEmails(emailFlag, passwordFlag, &newMessages); err != nil {
-			log.Println("Error while performing the read emails inside the cronjob: ", err.Error())
-		}
+	if emails, err = email.ReadEmails(emailFlag, passwordFlag, newMessages); err != nil {
+		log.Println("Error while performing the read emails inside the cronjob: ", err.Error())
+	}
 
-		log.Println("ReadEmails output err:", err)
+	log.Println("ReadEmails output err:", err)
 
-		if err = serve.CreateHTMLFile(emails, dump, isGokrazy); err != nil {
-			log.Println("Error while creating html file: ", err.Error())
-		}
+	if err = serve.CreateHTMLFile(emails, dump, isGokrazy); err != nil {
+		log.Println("Error while creating html file: ", err.Error())
+	}
 
-		log.Println("CreateHTMLFile output err:", err)
+	log.Println("CreateHTMLFile output err:", err)
 
-		newMessagesStr := strconv.Itoa(newMessages)
-		log.Printf("Got %s new messages\n", newMessagesStr)
+	newMessagesStr := strconv.Itoa(*newMessages)
+	log.Printf("Got %s new messages\n", newMessagesStr)
 
-		// Notifies telegram
-		if err := requests.NotifyTelegramBot(newMessagesStr, isGokrazy); err != nil {
-			log.Println("Error while notifying telegram bot: " + err.Error())
-		}
+	// Notifies telegram
+	if err := requests.NotifyTelegramBot(newMessagesStr, isGokrazy); err != nil {
+		log.Println("Error while notifying telegram bot: " + err.Error())
+	}
 
-		log.Println("NotifyTelegramBot output err:", err)
+	log.Println("NotifyTelegramBot output err:", err)
 
-		log.Printf("Finished cronjob %s\n", time.Now().String())
-	})
-
-	c.StartAsync()
+	log.Printf("Finished cronjob %s\n", time.Now().String())
 }
 
 func getNewEmails(emailFlag string, passwordFlag string, dump string, newMessages *int, isGokrazy bool) {
@@ -75,38 +65,29 @@ func handleExit(exit chan bool) {
 	exit <- true
 }
 
-func startServer(dumpFlag string) error {
-	exit := make(chan bool)
-	go handleExit(exit)
-
-	mux := http.NewServeMux()
-
-	fs := http.FileServer(http.Dir(dumpFlag))
-	mux.Handle("/dump/", http.StripPrefix("/dump/", fs))
-	mux.HandleFunc("/", handles.IndexHandle)
-
-	go func() {
-		if err := http.ListenAndServe(":9090", mux); err != nil && err != http.ErrServerClosed {
-			panic("Error trying to start http server: " + err.Error())
-		}
-	}()
-
-	log.Println("Serving at :9090")
-	<-exit
-
-	return nil
+type Args struct {
+	Email    string
+	Password string
+	Gokrazy  bool
+	Dump     string
 }
 
-func logic() error {
+func gatherFlags() (Args, error) {
 	var emailFlag = flag.String("email", "", "-email='youremail@mail.com'")
 	var passwordFlag = flag.String("password", "", "-password='yourpassword'")
 	var gokrazyFlag = flag.Bool("gokrazy", false, "use this if you are using gokrazy")
 	var dumpFlag = flag.String("dump", "", "-dump='/path/html/'")
-	var isDebugFlag = flag.Bool("debug", false, "use this if in debug mode")
 	flag.Parse()
 
 	if *emailFlag == "" || *passwordFlag == "" {
-		return fmt.Errorf("Please provide the email and password")
+		return Args{}, fmt.Errorf("Please provide the email and password")
+	}
+
+	args := Args{
+		Email:    *emailFlag,
+		Password: *passwordFlag,
+		Gokrazy:  *gokrazyFlag,
+		Dump:     *dumpFlag,
 	}
 
 	if *gokrazyFlag {
@@ -116,29 +97,63 @@ func logic() error {
 		errHtml := cp.Copy("/etc/gmah/html", "/perm/home/gmah/html")
 
 		if errTemplate != nil || errHtml != nil {
-			return fmt.Errorf("Error while copying files and folders to gokrazy perm (template:%v),(html:%v)", errTemplate, errHtml)
+			return Args{}, fmt.Errorf("Error while copying files and folders to gokrazy perm (template:%v),(html:%v)", errTemplate, errHtml)
 		}
 	}
 
-	// Cronjob to check new emails per day
-	var newMessages int
-	if *isDebugFlag {
-		getNewEmails(*emailFlag, *passwordFlag, *dumpFlag, &newMessages, *gokrazyFlag)
-	} else {
-		getNewEmailsCronJob(*emailFlag, *passwordFlag, *dumpFlag, &newMessages, *gokrazyFlag)
-	}
-
-	// Starts webserver
-	if err := startServer(*dumpFlag); err != nil {
-		return err
-	}
-
-	return nil
+	return args, nil
 }
 
 func main() {
-	if err := logic(); err != nil {
-		fmt.Println(err)
+	var (
+		args Args
+		err  error
+	)
+	if args, err = gatherFlags(); err != nil {
+		log.Println(err)
 		os.Exit(1)
+	}
+
+	// Starts webserver
+	exit := make(chan bool)
+	go handleExit(exit)
+
+	mux := http.NewServeMux()
+	fs := http.FileServer(http.Dir(args.Dump))
+	mux.Handle("/dump/", http.StripPrefix("/dump/", fs))
+	mux.HandleFunc("/", handles.IndexHandle)
+	go http.ListenAndServe(":9090", mux)
+
+	// Starts cronjon
+	var newMessages int
+
+	runCh := make(chan struct{})
+	go func() {
+		// Run forever, trigger a run at 18:00 every day.
+		for {
+			now := time.Now()
+			runToday := now.Hour() < 18
+			today := now.Day()
+			log.Printf("now = %v, runToday = %v", now, runToday)
+			for {
+				if time.Now().Day() != today {
+					// Day changed, re-evaluate whether to run today.
+					break
+				}
+
+				nextHour := time.Now().Truncate(time.Hour).Add(1 * time.Hour)
+				log.Printf("today = %d, runToday = %v, next hour: %v", today, runToday, nextHour)
+				time.Sleep(time.Until(nextHour))
+
+				if time.Now().Hour() >= 18 && runToday {
+					runToday = false
+					runCh <- struct{}{}
+				}
+			}
+		}
+	}()
+
+	for range runCh {
+		run(args.Email, args.Password, args.Dump, &newMessages, args.Gokrazy)
 	}
 }
