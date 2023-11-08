@@ -147,33 +147,35 @@ func buildEmail(messages chan *imap.Message, section *imap.BodySectionName, newM
 			email.Subject = subject
 		}
 
-		for {
-			p, err := mr.NextPart()
-			if err == io.EOF {
-				break
-			} else if err != nil {
-				log.Fatal(err)
-			}
+		// workaround for unwanted emails
+		if email.Subject != "Novos anúncios hoje" {
+			for {
+				p, err := mr.NextPart()
+				if err == io.EOF {
+					break
+				} else if err != nil {
+					log.Fatal(err)
+				}
 
-			b, err := io.ReadAll(p.Body)
-			if err != nil {
-				return []EmailTemplate{}, err
-			}
+				b, err := io.ReadAll(p.Body)
+				if err != nil {
+					return []EmailTemplate{}, err
+				}
 
-			if err := getLinkFromSource(email.From, string(b), &hrefSlice); err != nil {
-				return []EmailTemplate{}, err
-			}
+				if err := getLinkFromSource(email.From, string(b), &hrefSlice); err != nil {
+					return []EmailTemplate{}, err
+				}
 
-			email.Link = hrefSlice[0]
+				email.Link = hrefSlice[0]
 
-			if err := getSnippetFromSource(email.From, string(b), &snippet); err != nil {
-				log.Printf("Error while getting Snippet in %s : %v\n", email.From, err)
-			} else {
-				email.Snippet = snippet
+				if err := getSnippetFromSource(email.From, string(b), &snippet); err != nil {
+					log.Printf("Error while getting Snippet in %s : %v\n", email.From, err)
+				} else {
+					email.Snippet = snippet
+				}
 			}
+			emails = append(emails, email)
 		}
-
-		emails = append(emails, email)
 	}
 
 	return emails, nil
@@ -198,7 +200,7 @@ func ReadEmails(email string, password string, newMessages *int) ([]EmailTemplat
 
 	if mbox.Messages == 0 {
 		log.Println("No messages in Casas so skipping ...")
-		return []EmailTemplate{}, nil
+		return []EmailTemplate{}, fmt.Errorf("No messages in Casas so skipping ...")
 	}
 
 	seqSet := new(imap.SeqSet)
