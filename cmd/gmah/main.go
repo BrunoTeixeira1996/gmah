@@ -46,6 +46,9 @@ func run(emailFlag string, passwordFlag string, dump string, newMessages *int, i
 		log.Println("Error while notifying telegram bot: " + err.Error())
 	}
 
+	// Clean newMessages pointer
+	*newMessages = 0
+
 	log.Println("NotifyTelegramBot output err:", err)
 
 	log.Printf("Finished cronjob %s\n", time.Now().String())
