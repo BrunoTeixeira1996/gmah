@@ -63,6 +63,11 @@ func getLinkFromSource(source string, html string, hrefSlice *[]string) error {
 		if err := extractLinks(html, "https://supercasa.pt/venda", hrefSlice); err != nil {
 			return err
 		}
+
+	case "Casa Sapo":
+		if err := extractLinks(html, "https://casa.sapo.pt/detalhes", hrefSlice); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -84,6 +89,15 @@ func extractSnippet(html string, startCut string, finalCut string, tag string, s
 		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(strings.Split(output, "€")[0], "")) + "€"
 	case "SUPERCASA":
 		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(output, ""))
+	case "Casa Sapo":
+		paraRegex := regexp.MustCompile(`Para: (Venda|Arrendar)`)
+		precoRegex := regexp.MustCompile(`Preço: (.*?€)`)
+		estadoRegex := regexp.MustCompile(`Estado: (\w+\s*\w*)`)
+
+		paraMatches := paraRegex.FindStringSubmatch(output)
+		precoMatches := precoRegex.FindStringSubmatch(output)
+		estadoMatches := estadoRegex.FindStringSubmatch(output)
+		cleanedString = fmt.Sprintf("Para: %s - Preço: %s - Estado: %s", paraMatches[1], precoMatches[1], estadoMatches[1])
 	}
 
 	if cleanedString == "" {
@@ -104,6 +118,11 @@ func getSnippetFromSource(source string, html string, snippet *string) error {
 		}
 	case "SUPERCASA":
 		*snippet, err = extractSnippet(html, "<!-- Pre-header -->", "<!-- End region Pre-header -->", "div", source)
+		if err != nil {
+			return err
+		}
+	case "Casa Sapo":
+		*snippet, err = extractSnippet(html, "font-size: 13px; color: #777777; font-family: Arial, Helvetica, sans-serif; padding: 2px 0;", "text-align: center; margin: 0 0 30px 0; font-family: Arial, Helvetica, sans-serif", "span", source)
 		if err != nil {
 			return err
 		}
@@ -148,7 +167,7 @@ func buildEmail(messages chan *imap.Message, section *imap.BodySectionName, newM
 		}
 
 		// workaround for unwanted emails
-		if email.Subject != "Novos anúncios hoje" {
+		if email.Subject != "Novos anúncios hoje" && email.Subject != "Imóveis da mediadora Loben" {
 			for {
 				p, err := mr.NextPart()
 				if err == io.EOF {
@@ -162,6 +181,8 @@ func buildEmail(messages chan *imap.Message, section *imap.BodySectionName, newM
 					return []EmailTemplate{}, err
 				}
 
+				// FIXME: dont return an empty EmailTemplate and an error
+				// instead log the error for debug purposes
 				if err := getLinkFromSource(email.From, string(b), &hrefSlice); err != nil {
 					return []EmailTemplate{}, err
 				}
@@ -182,7 +203,7 @@ func buildEmail(messages chan *imap.Message, section *imap.BodySectionName, newM
 }
 
 // Main function that performs all the necessary logic to read and build emails
-func ReadEmails(email string, password string, newMessages *int) ([]EmailTemplate, error) {
+func ReadEmails(isDebug bool, email string, password string, newMessages *int) ([]EmailTemplate, error) {
 	c, err := initClient()
 	if err != nil {
 		return []EmailTemplate{}, err
@@ -193,7 +214,14 @@ func ReadEmails(email string, password string, newMessages *int) ([]EmailTemplat
 		return []EmailTemplate{}, err
 	}
 
-	mbox, err := c.Select("Casas", false)
+	var mbox *imap.MailboxStatus
+
+	if isDebug {
+		mbox, err = c.Select("teste", false)
+	} else {
+		mbox, err = c.Select("Casas", false)
+	}
+
 	if err != nil {
 		return []EmailTemplate{}, err
 	}

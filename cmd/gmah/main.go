@@ -18,7 +18,7 @@ import (
 	cp "github.com/otiai10/copy"
 )
 
-func run(emailFlag string, passwordFlag string, dump string, newMessages *int, isGokrazy bool) {
+func run(isDebug bool, emailFlag string, passwordFlag string, dump string, newMessages *int, isGokrazy bool) {
 	var (
 		emails []email.EmailTemplate
 		err    error
@@ -26,7 +26,7 @@ func run(emailFlag string, passwordFlag string, dump string, newMessages *int, i
 
 	log.Printf("Executing cronjob %s ...\n", time.Now().String())
 
-	if emails, err = email.ReadEmails(emailFlag, passwordFlag, newMessages); err != nil {
+	if emails, err = email.ReadEmails(isDebug, emailFlag, passwordFlag, newMessages); err != nil {
 		log.Println("Error while performing the read emails inside the cronjob: ", err.Error())
 	}
 
@@ -54,12 +54,6 @@ func run(emailFlag string, passwordFlag string, dump string, newMessages *int, i
 	log.Printf("Finished cronjob %s\n", time.Now().String())
 }
 
-func getNewEmails(emailFlag string, passwordFlag string, dump string, newMessages *int, isGokrazy bool) {
-	if _, err := email.ReadEmails(emailFlag, passwordFlag, newMessages); err != nil {
-		log.Println("Error while performing the read emails inside the cronjob: ", err.Error())
-	}
-}
-
 func handleExit(exit chan bool) {
 	ch := make(chan os.Signal, 5)
 	signal.Notify(ch, os.Interrupt)
@@ -73,6 +67,7 @@ type Args struct {
 	Password string
 	Gokrazy  bool
 	Dump     string
+	Debug    bool
 }
 
 func gatherFlags() (Args, error) {
@@ -80,6 +75,7 @@ func gatherFlags() (Args, error) {
 	var passwordFlag = flag.String("password", "", "-password='yourpassword'")
 	var gokrazyFlag = flag.Bool("gokrazy", false, "use this if you are using gokrazy")
 	var dumpFlag = flag.String("dump", "", "-dump='/path/html/'")
+	var debugFlag = flag.Bool("debug", false, "use this to ignore cronjob")
 	flag.Parse()
 
 	if *emailFlag == "" || *passwordFlag == "" {
@@ -91,6 +87,7 @@ func gatherFlags() (Args, error) {
 		Password: *passwordFlag,
 		Gokrazy:  *gokrazyFlag,
 		Dump:     *dumpFlag,
+		Debug:    *debugFlag,
 	}
 
 	if *gokrazyFlag {
@@ -127,9 +124,15 @@ func main() {
 	mux.HandleFunc("/", handles.IndexHandle)
 	go http.ListenAndServe(":9090", mux)
 
-	// Starts cronjon
 	var newMessages int
 
+	// If its debug mode then run and ignore cronjob
+	if args.Debug {
+		run(args.Debug, args.Email, args.Password, args.Dump, &newMessages, args.Gokrazy)
+		return
+	}
+
+	// Starts cronjon
 	runCh := make(chan struct{})
 	go func() {
 		// Run forever, trigger a run at 18:00 every day.
@@ -145,7 +148,7 @@ func main() {
 				}
 
 				nextHour := time.Now().Truncate(time.Hour).Add(1 * time.Hour)
-				log.Printf("today = %d, runToday = %v, next hour: %v", today, runToday, nextHour)
+				//log.Printf("today = %d, runToday = %v, next hour: %v", today, runToday, nextHour)
 				time.Sleep(time.Until(nextHour))
 
 				if time.Now().Hour() >= 18 && runToday {
@@ -157,6 +160,6 @@ func main() {
 	}()
 
 	for range runCh {
-		run(args.Email, args.Password, args.Dump, &newMessages, args.Gokrazy)
+		run(args.Debug, args.Email, args.Password, args.Dump, &newMessages, args.Gokrazy)
 	}
 }
