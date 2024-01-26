@@ -181,14 +181,14 @@ func buildEmail(messages chan *imap.Message, section *imap.BodySectionName, newM
 					return []EmailTemplate{}, err
 				}
 
-				// FIXME: dont return an empty EmailTemplate and an error
-				// instead log the error for debug purposes
+				// If could not extract link then just ignore the link
 				if err := getLinkFromSource(email.From, string(b), &hrefSlice); err != nil {
-					return []EmailTemplate{}, err
+					log.Println(fmt.Errorf("Error while getLinkFromSource: %v", err))
+				} else {
+					email.Link = hrefSlice[0]
 				}
 
-				email.Link = hrefSlice[0]
-
+				// If could not extract snippet then just ignore the snippet
 				if err := getSnippetFromSource(email.From, string(b), &snippet); err != nil {
 					log.Printf("Error while getting Snippet in %s : %v\n", email.From, err)
 				} else {
