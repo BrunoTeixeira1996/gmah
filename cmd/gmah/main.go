@@ -18,6 +18,18 @@ import (
 	cp "github.com/otiai10/copy"
 )
 
+// Handles GET to lookup on demand
+func lookUpHandle(args Args, newMessages int) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "GET" {
+			http.Error(w, "NOT GET!", http.StatusBadRequest)
+			return
+		}
+		log.Println("Running lookup on demand")
+		run(args.Debug, args.Email, args.Password, args.Dump, &newMessages, args.Gokrazy)
+	}
+}
+
 func run(isDebug bool, emailFlag string, passwordFlag string, dump string, newMessages *int, isGokrazy bool) {
 	var (
 		emails []email.EmailTemplate
@@ -118,13 +130,14 @@ func main() {
 	exit := make(chan bool)
 	go handleExit(exit)
 
+	var newMessages int
+
 	mux := http.NewServeMux()
 	fs := http.FileServer(http.Dir(args.Dump))
 	mux.Handle("/dump/", http.StripPrefix("/dump/", fs))
 	mux.HandleFunc("/", handles.IndexHandle)
+	mux.HandleFunc("/lookup", lookUpHandle(args, newMessages))
 	go http.ListenAndServe(":9090", mux)
-
-	var newMessages int
 
 	// If its debug mode then run and ignore cronjob
 	if args.Debug {
