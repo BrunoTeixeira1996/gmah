@@ -19,4 +19,4 @@
 - [X] Idealista
 - [ ] Imovirtual
 - [X] Supercasa
-- [ ] Casa sapo
+- [X] Casa sapo
