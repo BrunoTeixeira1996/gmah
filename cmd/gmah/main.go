@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/signal"
 	"strconv"
 	"time"
 
@@ -66,14 +65,6 @@ func run(isDebug bool, emailFlag string, passwordFlag string, dump string, newMe
 	log.Printf("Finished cronjob %s\n", time.Now().String())
 }
 
-func handleExit(exit chan bool) {
-	ch := make(chan os.Signal, 5)
-	signal.Notify(ch, os.Interrupt)
-	<-ch
-	log.Println("Closing web server")
-	exit <- true
-}
-
 type Args struct {
 	Email    string
 	Password string
@@ -125,10 +116,6 @@ func main() {
 		log.Println(err)
 		os.Exit(1)
 	}
-
-	// Starts webserver
-	exit := make(chan bool)
-	go handleExit(exit)
 
 	var newMessages int
 
