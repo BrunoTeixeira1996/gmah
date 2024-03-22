@@ -17,14 +17,14 @@ import (
 	cp "github.com/otiai10/copy"
 )
 
-// Handles GET to lookup on demand
-func lookUpHandle(args Args, newMessages int) http.HandlerFunc {
+// Handles GET to check demand
+func demandHandle(args Args, newMessages int) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {
 			http.Error(w, "NOT GET!", http.StatusBadRequest)
 			return
 		}
-		log.Println("Running lookup on demand")
+		log.Println("Running demand handle")
 		run(args.Debug, args.Email, args.Password, args.Dump, &newMessages, args.Gokrazy)
 	}
 }
@@ -53,7 +53,7 @@ func run(isDebug bool, emailFlag string, passwordFlag string, dump string, newMe
 	log.Printf("Got %s new messages\n", newMessagesStr)
 
 	// Notifies telegram
-	if err := requests.NotifyTelegramBot(newMessagesStr, isGokrazy); err != nil {
+	if err := requests.NotifyTelegramBot(newMessagesStr, isGokrazy, nil); err != nil {
 		log.Println("Error while notifying telegram bot: " + err.Error())
 	}
 
@@ -123,7 +123,8 @@ func main() {
 	fs := http.FileServer(http.Dir(args.Dump))
 	mux.Handle("/dump/", http.StripPrefix("/dump/", fs))
 	mux.HandleFunc("/", handles.IndexHandle)
-	mux.HandleFunc("/lookup", lookUpHandle(args, newMessages))
+	mux.HandleFunc("/demand", demandHandle(args, newMessages))
+	mux.HandleFunc("/lpspecific", handles.LookUpSpecificHandle)
 	go http.ListenAndServe(":9090", mux)
 
 	// If its debug mode then run and ignore cronjob
