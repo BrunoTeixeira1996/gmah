@@ -127,6 +127,8 @@ func main() {
 	mux.HandleFunc("/lpspecific", handles.LookUpSpecificHandle)
 	go http.ListenAndServe(":9090", mux)
 
+	log.Println("Listening on port 9090")
+
 	// If its debug mode then run and ignore cronjob
 	if args.Debug {
 		run(args.Debug, args.Email, args.Password, args.Dump, &newMessages, args.Gokrazy)
@@ -144,7 +146,7 @@ func main() {
 			log.Printf("now = %v, runToday = %v", now, runToday)
 			for {
 				if time.Now().Day() != today {
-					// Day changed, re-evaluate whether to run today.
+					log.Println("Day changed, re-evaluate whether to run today")
 					break
 				}
 
