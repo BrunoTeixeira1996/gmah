@@ -17,6 +17,13 @@ import (
 	cp "github.com/otiai10/copy"
 )
 
+var supportedWebsites = []string{
+	"Idealista",
+	"Imovirtual",
+	"Supercasa",
+	"Casasapo",
+}
+
 // Handles GET to check demand
 func demandHandle(args Args, newMessages int) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -128,6 +135,7 @@ func main() {
 	go http.ListenAndServe(":9090", mux)
 
 	log.Println("Listening on port 9090")
+	log.Println("Supported Websites:", supportedWebsites)
 
 	// If its debug mode then run and ignore cronjob
 	if args.Debug {

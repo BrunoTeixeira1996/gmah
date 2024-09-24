@@ -18,6 +18,7 @@
 # Websites
 
 - [X] Idealista
-- [ ] Imovirtual
+- [X] Imovirtual
 - [X] Supercasa
 - [X] Casa sapo
+- [ ] CasaYes
