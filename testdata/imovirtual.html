@@ -1,605 +1,437 @@
 <!DOCTYPE html>
-<html lang=3D"en" xmlns=3D"http://www.w3.org/1999/xhtml" xmlns:o=3D"urn:sch=
-emas-microsoft-com:office:office">
-<head>
-    <meta charset=3D"utf-8">
-    <meta name=3D"viewport" content=3D"width=3Ddevice-width,initial-scale=
-=3D1">
-    <meta name=3D"x-apple-disable-message-reformatting">
-    <meta name=3D"format-detection" content=3D"telephone=3Dno">
-    <title></title>
-    <link rel=3D"preconnect" href=3D"https://fonts.googleapis.com">
-    <link rel=3D"preconnect" href=3D"https://fonts.gstatic.com" crossorigin=
->
-    <link href=3D"https://fonts.googleapis.com/css2?family=3DOpen+Sans&disp=
-lay=3Dswap" rel=3D"stylesheet">
-    <style>
-        html, body, div, span, applet, object, iframe,
-        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-        a, abbr, acronym, address, big, cite, code,
-        del, dfn, em, img, ins, kbd, q, s, samp,
-        small, strike, sub, sup, tt, var,
-        b, u, i, center,
-        dl, dt, dd, ol, ul, li,
-        fieldset, form, label, legend,
-        table, caption, tbody, tfoot, thead, tr, th, td,
-        article, aside, canvas, details, embed,
-        figure, figcaption, footer, header, hgroup,
-        menu, nav, output, ruby, section, summary,
-        time, mark, audio, video {
-            margin: 0;
-            padding: 0;
-            border: 0;
-            font-size: 100%;
-            font: inherit;
-            /*vertical-align: baseline;*/
-        }
-        /* HTML5 display-role reset for older browsers */
-        article, aside, details, figcaption, figure,
-        footer, header, hgroup, menu, nav, section {
-            display: block;
-        }
-        table, td, div, h1, p {
-            font-family: Arial, 'Open Sans', sans-serif;
-        }
-        table {
-            border-collapse: collapse;
-            border-spacing: 0;
-            border: none;
-            margin: 0;
-        }
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
+  <head>
+    <meta charset=utf-8">
+			<meta name="viewport" content="width=device-width,initial-scale=1">
+			<meta name="x-apple-disable-message-reformatting">
+			<meta name="format-detection" content="telephone=no">
+			<title></title>
+			<link rel="preconnect" href="https://fonts.googleapis.com">
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+			<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+			<style>
+			  html, body, div, span, applet, object, iframe,
+			  h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+			  a, abbr, acronym, address, big, cite, code,
+			  del, dfn, em, img, ins, kbd, q, s, samp,
+			  small, strike, sub, sup, tt, var,
+			  b, u, i, center,
+			  dl, dt, dd, ol, ul, li,
+			  fieldset, form, label, legend,
+			  table, caption, tbody, tfoot, thead, tr, th, td,
+			  article, aside, canvas, details, embed,
+			  figure, figcaption, footer, header, hgroup,
+			  menu, nav, output, ruby, section, summary,
+			  time, mark, audio, video {
+			  margin: 0;
+			  padding: 0;
+			  border: 0;
+			  font-size: 100%;
+			  font: inherit;
+			  /*vertical-align: baseline;*/
+			  }
+			  /* HTML5 display-role reset for older browsers */
+			  article, aside, details, figcaption, figure,
+			  footer, header, hgroup, menu, nav, section {
+			  display: block;
+			  }
+			  table, td, div, h1, p {
+			  font-family: Arial, 'Open Sans', sans-serif;
+			  }
+			  table {
+			  border-collapse: collapse;
+			  border-spacing: 0;
+			  border: none;
+			  margin: 0;
+			  }
 
-        /*.test-invert  { background-image: url('https://i.imgur.com/UuHO87=
-D.jpg'); background-repeat: repeat; }*/
-        /*.test-invert { background-color: magenta; }*/
+			  /*.test-invert  { background-image: url('https://i.imgur.com/UuHO87D.jpg'); background-repeat: repeat; }*/
+			  /*.test-invert { background-color: magenta; }*/
 
-        @media (max-width: 481px) {
-            .actions__link-margin {
-                margin-bottom: 16px;
-            }
-        }
+			  @media (max-width: 481px) {
+			  .actions__link-margin {
+			  margin-bottom: 16px;
+			  }
+			  }
 
-        @media (min-width: 481px) {
-            .mobile {
-                display: none !important;
-            }
+			  @media (min-width: 481px) {
+			  .mobile {
+			  display: none !important;
+			  }
 
-            .desktop {
-                display: inline-block !important;
-            }
+			  .desktop {
+			  display: inline-block !important;
+			  }
 
-            .actions__separator {
-                display: inline !important;
-            }
+			  .actions__separator {
+			  display: inline !important;
+			  }
 
-            .actions__link {
-                display: inline-block !important;
-            }
-        }
+			  .actions__link {
+			  display: inline-block !important;
+			  }
+			  }
 
-        [data-ogsc] .dark-mode {
-            display: inline-block !important;
-        }
+			  [data-ogsc] .dark-mode {
+			  display: inline-block !important;
+			  }
 
-        [data-ogsc] .light-mode {
-            display: none !important;
-        }
-    </style>
-</head>
+			  [data-ogsc] .light-mode {
+			  display: none !important;
+			  }
+			</style>
+			<style type="text/css">
 
-<body style=3D"font-family: Arial, 'Open Sans', sans-serif; margin: 0; padd=
-ing: 0px 8px 0px 8px; word-spacing: normal; background-color: #FFFFFF;">
-<!-- tracking pixel -->
-<img src=3D"https://imovirtual.com/prdimovirtualpt/email/tracking/4624184/1=
-727178150084" alt=3D"" style=3D"display: none; width: 1px; height: 1px;">
-<span style=3D"color: transparent; display: none !important; height: 0; max=
--height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visi=
-bility: hidden; width: 0;">
-    Encontr=C3=A1mos 1 an=C3=BAncio novo que corresponde =C3=A0 sua pesquis=
-a guardada.
-Moradia T3 para venda em Anadia.
- Moradia
+			  h4 
+			  {
+			  text-align: left;
+			  }
 
- para comprar:
-Moita, Anadia, Aveiro
-</span>
-<div role=3D"article" aria-roledescription=3D"email" lang=3D"en" style=3D"t=
-ext-size-adjust: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust=
-: 100%; background-color: #FFFFFF;">
-    <table role=3D"presentation" style=3D"width: 100%; border: none; border=
--spacing: 0;">
+			  @media screen 
+			  {
+
+			  .headerLineTitle
+			  {
+			  width:1.5in;
+			  display:inline-block;
+			  margin:0in;
+			  margin-bottom:.0001pt;
+			  font-size:11.0pt;
+			  font-family:"Calibri","sans-serif";
+			  font-weight:bold;
+			  }
+
+			  .headerLineText
+			  {
+			  display:inline;
+			  margin:0in;
+			  margin-bottom:.0001pt;
+			  font-size:11.0pt;
+			  font-family:"Calibri","sans-serif";
+			  font-weight:normal;
+			  }
+
+			  .pageHeader
+			  {
+			  font-size:14.0pt;
+			  font-family:"Calibri","sans-serif";
+			  font-weight:bold;
+			  visibility:hidden;
+			  display:none;
+			  }   
+			  }
+
+			  @media print 
+			  {
+			  .headerLineTitle
+			  {
+			  width:1.5in;
+			  display:inline-block;
+			  margin:0in;
+			  margin-bottom:.0001pt;
+			  font-size:11.0pt;
+			  font-family:"Calibri","sans-serif";
+			  font-weight:bold;
+			  }
+
+			  .headerLineText
+			  {
+			  display:inline;
+			  margin:0in;
+			  margin-bottom:.0001pt;
+			  font-size:11.0pt;
+			  font-family:"Calibri","sans-serif";
+			  font-weight:normal;
+			  }
+
+			  .pageHeader
+			  {
+			  font-size:14.0pt;
+			  font-family:"Calibri","sans-serif";
+			  font-weight:bold;
+			  visibility:visible;
+			  display:block;
+			  }
+
+			  }
+			</style>
+  </head>
+
+  <body style="font-family: Arial, 'Open Sans', sans-serif; margin: 0; padding: 0px 8px 0px 8px; word-spacing: normal; background-color: #FFFFFF;"><span class='headerLineTitle'>From:</span><span class='headerLineText'>Imovirtual &lt;noreply@imovirtual.com&gt;</span><br/><span class='headerLineTitle'>Sent:</span><span class='headerLineText'>Tue, 24 Sep 2024 14:39:23 +0000</span><br/><span class='headerLineTitle'>To:</span><span class='headerLineText'>jhijijijhi@gmail.com</span><br/><span class='headerLineTitle'>Subject:</span><span class='headerLineText'>Aveiro, Moradia para comprar, novo ou usado</span><br/><br/>
+    <!-- tracking pixel -->
+    <img src="https://imovirtual.com/prdimovirtualpt/email/tracking/4624184/1727178150084" alt="" style="display: none; width: 1px; height: 1px;">
+    <span style="color: transparent; display: none !important; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">
+      Encontrámos 1 anúncio novo que corresponde à sua pesquisa guardada.
+      Moradia T3 para venda em Anadia.
+      Moradia
+
+      para comprar:
+      Moita, Anadia, Aveiro
+    </span>
+    <div role="article" aria-roledescription="email" lang="en" style="text-size-adjust: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #FFFFFF;">
+      <table role="presentation" style="width: 100%; border: none; border-spacing: 0;">
         <tr>
-            <td align=3D"center" style=3D"padding: 0;">
-                <table role=3D"presentation" style=3D"width: 94%; max-width=
-: 600px; border: none; border-spacing: 0; text-align: left; font-family: Ar=
-ial, 'Open Sans', sans-serif; font-size: 16px; line-height: 22px; color: #3=
-63636;">
+          <td align="center" style="padding: 0;">
+            <table role="presentation" style="width: 94%; max-width: 600px; border: none; border-spacing: 0; text-align: left; font-family: Arial, 'Open Sans', sans-serif; font-size: 16px; line-height: 22px; color: #363636;">
+              <tr>
+                <td style="padding: 40px 30px 30px 30px; text-align: center; font-size: 24px; font-weight: bold;">
+                  <div class="test-invert email-background" style="padding: 12px 10px 10px 10px; display: inline-block;">
+                    <a href="https://imovirtual.pt?utm_medium=email&utm_source=siren&utm_campaign=saved-search-immediate" style="text-decoration: none;">
+                      <img src="https://ireland.apollo.olxcdn.com/v1/files/azqz6i1dt1yk1-MISC/image;f=png" height="24" alt="Logo" style="display: inline-block; border: none; text-decoration: none; color: #ffffff;" class="light-mode">
+                      <img src="https://ireland.apollo.olxcdn.com/v1/files/azqz6i1dt1yk1-MISC/image;f=png" height="24" alt="Logo" style="display: none; border: none; text-decoration: none; color: #ffffff;" class="dark-mode">
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 4px 12px 0 12px;">
+                  <table role="presentation" style="width: 100%; border: none; border-spacing: 0;">
                     <tr>
-                        <td style=3D"padding: 40px 30px 30px 30px; text-ali=
-gn: center; font-size: 24px; font-weight: bold;">
-                            <div class=3D"test-invert email-background" sty=
-le=3D"padding: 12px 10px 10px 10px; display: inline-block;">
-                                <a href=3D"https://imovirtual.pt?utm_medium=
-=3Demail&utm_source=3Dsiren&utm_campaign=3Dsaved-search-immediate" style=3D=
-"text-decoration: none;">
-                                    <img src=3D"https://ireland.apollo.olxc=
-dn.com/v1/files/azqz6i1dt1yk1-MISC/image;f=3Dpng" height=3D"24" alt=3D"Logo=
-" style=3D"display: inline-block; border: none; text-decoration: none; colo=
-r: #ffffff;" class=3D"light-mode">
-                                    <img src=3D"https://ireland.apollo.olxc=
-dn.com/v1/files/azqz6i1dt1yk1-MISC/image;f=3Dpng" height=3D"24" alt=3D"Logo=
-" style=3D"display: none; border: none; text-decoration: none; color: #ffff=
-ff;" class=3D"dark-mode">
-                                </a>
-                            </div>
-                        </td>
+                      <td style="padding: 8px 0 0 0;">
+                        <p style="font-family: Arial, 'Open Sans', sans-serif; font-style: normal; font-weight: normal; font-size: 16px; line-height: 18px; color: #404041; margin: 0; text-align: center;">
+                          <a href="https://www.imovirtual.com/pt/guardados/pesquisas?utm_medium=email&utm_source=siren&utm_campaign=saved-search-immediate" target="_blank" style="color: #232e3f; text-decoration: none; font-weight: 700; ">
+                            Encontrámos 1
+                            anúncio novo que corresponde à sua pesquisa guardada
+                          </a>
+                        </p>
+                      </td>
                     </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="padding: 0 0 0 0;">
+                  <table role="presentation" style="width: 100%; border: none; border-spacing: 0;">
                     <tr>
-                        <td style=3D"padding: 4px 12px 0 12px;">
-                            <table role=3D"presentation" style=3D"width: 10=
-0%; border: none; border-spacing: 0;">
-                                <tr>
-                                    <td style=3D"padding: 8px 0 0 0;">
-                                        <p style=3D"font-family: Arial, 'Op=
-en Sans', sans-serif; font-style: normal; font-weight: normal; font-size: 1=
-6px; line-height: 18px; color: #404041; margin: 0; text-align: center;">
-                                            <a href=3D"https://www.imovirtu=
-al.com/pt/guardados/pesquisas?utm_medium=3Demail&utm_source=3Dsiren&utm_cam=
-paign=3Dsaved-search-immediate" target=3D"_blank" style=3D"color: #232e3f; =
-text-decoration: none; font-weight: 700; ">
-                                                Encontr=C3=A1mos 1
-                                                                           =
-                         an=C3=BAncio novo que corresponde =C3=A0 sua pesqu=
-isa guardada
-                                                                           =
-                 </a>
-                                        </p>
+                      <td align="center" style="padding: 0;">
+                        <table role="presentation" style="border-collapse: separate; border-spacing: 0 32px; width: 97%;">
+                          <tr>
+                            <td style="padding: 0; border: 1px solid #bdbdbd;">
+                              <a href="https://www.imovirtual.com/pt/anuncio/moradia-t3-para-venda-em-anadia-ID1fxx0?utm_medium=email&utm_source=siren&utm_campaign=saved-search-immediate" target="_blank" style="text-decoration: none; color: #212121">
+                                <table role="presentation" width="100%">
+                                  <tr>
+                                    <td style="padding: 0;">
+                                      <img src="https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InQ0c290Z3RkdDViMS1FQ09TWVNURU0iLCJ3IjpbeyJmbiI6IjY5bmxwYTdlY3FtNzEtQVBUIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ._lkKnKgmPcEI_Q-NbyDwnm-CnSOTDDlVCidQhS-vARs/image;s=655x491;q=80" class="mobile" width="100%" height="100%" style="vertical-align: middle; object-fit: cover; max-height: 224px;" alt="Ad"/>
+                                      <!--[if !mso]>-->
+                                      <img src="https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InQ0c290Z3RkdDViMS1FQ09TWVNURU0iLCJ3IjpbeyJmbiI6IjY5bmxwYTdlY3FtNzEtQVBUIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ._lkKnKgmPcEI_Q-NbyDwnm-CnSOTDDlVCidQhS-vARs/image;s=655x491;q=80" class="desktop" width="100%" height="100%" style="vertical-align: middle; object-fit: cover; max-height: 320px; display: none;" alt="Ad"/>
+                                      <!--<![endif]-->
                                     </td>
+                                  </tr>
+                                  <tr>
+                                    <td style="padding: 16px 16px 0 16px;" width="100%">
+                                      <table role="presentation" width="100%">
+                                        <tr>
+                                          <td style="padding-bottom: 8px;">
+                                            <h2 style="margin: 0; font-family: Arial, 'Open Sans', sans-serif; font-weight: 700; line-height: normal; font-size: 14px;">Moradia T3 para venda em Anadia</h2>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td style="padding: 0 0 0 0;">
+                                            <p style="margin: 0; font-family: Arial, 'Open Sans', sans-serif; line-height: normal; font-size: 12px; font-weight: 700; color: #4f5865">Moita, Anadia, Aveiro</p>
+                                          </td>
+                                        </tr>
+                                      </table>
+                                      <div>
+                                        <div style="padding: 16px 0 0 0; display: inline-block; margin-right: 6px;">
+                                          <span style="font-family: Arial, 'Open Sans', sans-serif; font-size: 24px; font-weight: 700; white-space: nowrap; color: #212121">210 000 &euro;</span>
+                                        </div>
+                                        <div style="padding: 16px 0 16px 0; color: #212121; display: inline-block;">
+                                          <span style="font-family: Arial, 'Open Sans', sans-serif; font-size: 16px; font-weight: 700; display: inline-block; margin-right: 6px;">1 095 &euro;/m²</span>
+                                          <span style="font-family: Arial, 'Open Sans', sans-serif; font-size: 16px; font-weight: 700; display: inline-block; margin-right: 6px;">191,79 m²</span>
+                                          <span style="font-family: Arial, 'Open Sans', sans-serif; font-size: 16px; font-weight: 700; display: inline-block; margin-right: 6px;">T3</span>
+                                        </div>
+                                        <div style="font-weight: 700; font-size: 12px;">
+                                          Arcada Albergaria
+                                        </div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </a>
+                              <table role="presentation" width="100%">
+                                <tr>
+                                  <td style="border-radius: 3px; background: #ffffff; text-align: center; padding: 16px 8px 14px 14px;" width="50%">
+                                    <a href="https://www.imovirtual.com/pt/anuncio/moradia-t3-para-venda-em-anadia-ID1fxx0?utm_medium=email&utm_source=siren&utm_campaign=saved-search-immediate" target="_blank" data-saferedirecturl="https://imovirtual.pt" style="white-space: nowrap; padding: 0 40px 0 40px; background: #ffffff; border: 2px solid #071121; font-family: Arial, 'Open Sans', sans-serif; font-size: 14px; mso-height-rule: exactly; line-height: 10px; text-align: center; text-decoration: none; display: block; border-radius: 3px; padding: 15px;">
+                                      <span style="color: #071121; font-size: 14px; font-weight: 700;">Contacto</span>
+                                    </a>
+                                  </td>
+                                  <td style="border-radius: 3px; background: #ffffff; text-align: center; padding: 16px 14px 14px 8px;" width="50%">
+                                    <a href="https://www.imovirtual.com/pt/anuncio/moradia-t3-para-venda-em-anadia-ID1fxx0?utm_medium=email&utm_source=siren&utm_campaign=saved-search-immediate" target="_blank" data-saferedirecturl="https://imovirtual.pt" style="white-space: nowrap; padding: 0 40px 0 40px; background: #232E3F; border: 2px solid #232E3F; font-family: Arial, 'Open Sans', sans-serif; font-size: 14px; mso-height-rule: exactly; line-height: 10px; text-align: center; text-decoration: none; display: block; border-radius: 3px; padding: 15px;">
+                                      <span style="color: #ffffff; font-size: 14px; font-weight: 700;">Ver anúncio</span>
+                                    </a>
+                                  </td>
                                 </tr>
-                            </table>
-                        </td>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
                     </tr>
+                    
                     <tr>
-                        <td align=3D"center" style=3D"padding: 0 0 0 0;">
-                            <table role=3D"presentation" style=3D"width: 10=
-0%; border: none; border-spacing: 0;">
-                                <tr>
-                                    <td align=3D"center" style=3D"padding: =
-0;">
-                                        <table role=3D"presentation" style=
-=3D"border-collapse: separate; border-spacing: 0 32px; width: 97%;">
-                                                                           =
-             <tr>
-                                                <td style=3D"padding: 0; bo=
-rder: 1px solid #bdbdbd;">
-                                                    <a href=3D"https://www.=
-imovirtual.com/pt/anuncio/moradia-t3-para-venda-em-anadia-ID1fxx0?utm_mediu=
-m=3Demail&utm_source=3Dsiren&utm_campaign=3Dsaved-search-immediate" target=
-=3D"_blank" style=3D"text-decoration: none; color: #212121">
-                                                        <table role=3D"pres=
-entation" width=3D"100%">
-                                                            <tr>
-                                                                <td style=
-=3D"padding: 0;">
-                                                                    <img sr=
-c=3D"https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InQ0c290Z3RkdDViMS1=
-FQ09TWVNURU0iLCJ3IjpbeyJmbiI6IjY5bmxwYTdlY3FtNzEtQVBUIiwicyI6IjE0IiwicCI6Ij=
-EwLC0xMCIsImEiOiIwIn1dfQ._lkKnKgmPcEI_Q-NbyDwnm-CnSOTDDlVCidQhS-vARs/image;=
-s=3D655x491;q=3D80" class=3D"mobile" width=3D"100%" height=3D"100%" style=
-=3D"vertical-align: middle; object-fit: cover; max-height: 224px;" alt=3D"A=
-d"/>
-                                                                    <!--[if=
- !mso]>-->
-                                                                    <img sr=
-c=3D"https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InQ0c290Z3RkdDViMS1=
-FQ09TWVNURU0iLCJ3IjpbeyJmbiI6IjY5bmxwYTdlY3FtNzEtQVBUIiwicyI6IjE0IiwicCI6Ij=
-EwLC0xMCIsImEiOiIwIn1dfQ._lkKnKgmPcEI_Q-NbyDwnm-CnSOTDDlVCidQhS-vARs/image;=
-s=3D655x491;q=3D80" class=3D"desktop" width=3D"100%" height=3D"100%" style=
-=3D"vertical-align: middle; object-fit: cover; max-height: 320px; display: =
-none;" alt=3D"Ad"/>
-                                                                    <!--<![=
-endif]-->
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style=
-=3D"padding: 16px 16px 0 16px;" width=3D"100%">
-                                                                    <table =
-role=3D"presentation" width=3D"100%">
-                                                                        <tr=
->
-                                                                           =
- <td style=3D"padding-bottom: 8px;">
-                                                                           =
-     <h2 style=3D"margin: 0; font-family: Arial, 'Open Sans', sans-serif; f=
-ont-weight: 700; line-height: normal; font-size: 14px;">Moradia T3 para ven=
-da em Anadia</h2>
-                                                                           =
- </td>
-                                                                        </t=
-r>
-                                                                        <tr=
->
-                                                                           =
- <td style=3D"padding: 0 0 0 0;">
-                                                                           =
-     <p style=3D"margin: 0; font-family: Arial, 'Open Sans', sans-serif; li=
-ne-height: normal; font-size: 12px; font-weight: 700; color: #4f5865">Moita=
-, Anadia, Aveiro</p>
-                                                                           =
- </td>
-                                                                        </t=
-r>
-                                                                    </table=
->
-                                                                    <div>
-                                                                        <di=
-v style=3D"padding: 16px 0 0 0; display: inline-block; margin-right: 6px;">
-                                                                           =
-                                                                           =
-  <span style=3D"font-family: Arial, 'Open Sans', sans-serif; font-size: 24=
-px; font-weight: 700; white-space: nowrap; color: #212121">210=C2=A0000 &eu=
-ro;</span>
-                                                                           =
-                                                                         </=
-div>
-                                                                        <di=
-v style=3D"padding: 16px 0 16px 0; color: #212121; display: inline-block;">
-                                                                           =
-                                                                           =
-  <span style=3D"font-family: Arial, 'Open Sans', sans-serif; font-size: 16=
-px; font-weight: 700; display: inline-block; margin-right: 6px;">1=C2=A0095=
- &euro;/m=C2=B2</span>
-                                                                           =
-                                                                           =
-                                                                           =
-   <span style=3D"font-family: Arial, 'Open Sans', sans-serif; font-size: 1=
-6px; font-weight: 700; display: inline-block; margin-right: 6px;">191,79 m=
-=C2=B2</span>
-                                                                           =
-                                                                           =
-                                                                           =
-   <span style=3D"font-family: Arial, 'Open Sans', sans-serif; font-size: 1=
-6px; font-weight: 700; display: inline-block; margin-right: 6px;">T3</span>
-                                                                           =
-                                                                         </=
-div>
-                                                                        <di=
-v style=3D"font-weight: 700; font-size: 12px;">
-                                                                           =
- Arcada Albergaria
-                                                                        </d=
-iv>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </a>
-                                                    <table role=3D"presenta=
-tion" width=3D"100%">
-                                                        <tr>
-                                                            <td style=3D"bo=
-rder-radius: 3px; background: #ffffff; text-align: center; padding: 16px 8p=
-x 14px 14px;" width=3D"50%">
-                                                                <a href=3D"=
-https://www.imovirtual.com/pt/anuncio/moradia-t3-para-venda-em-anadia-ID1fx=
-x0?utm_medium=3Demail&utm_source=3Dsiren&utm_campaign=3Dsaved-search-immedi=
-ate" target=3D"_blank" data-saferedirecturl=3D"https://imovirtual.pt" style=
-=3D"white-space: nowrap; padding: 0 40px 0 40px; background: #ffffff; borde=
-r: 2px solid #071121; font-family: Arial, 'Open Sans', sans-serif; font-siz=
-e: 14px; mso-height-rule: exactly; line-height: 10px; text-align: center; t=
-ext-decoration: none; display: block; border-radius: 3px; padding: 15px;">
-                                                                    <span s=
-tyle=3D"color: #071121; font-size: 14px; font-weight: 700;">Contacto</span>
-                                                                </a>
-                                                            </td>
-                                                            <td style=3D"bo=
-rder-radius: 3px; background: #ffffff; text-align: center; padding: 16px 14=
-px 14px 8px;" width=3D"50%">
-                                                                <a href=3D"=
-https://www.imovirtual.com/pt/anuncio/moradia-t3-para-venda-em-anadia-ID1fx=
-x0?utm_medium=3Demail&utm_source=3Dsiren&utm_campaign=3Dsaved-search-immedi=
-ate" target=3D"_blank" data-saferedirecturl=3D"https://imovirtual.pt" style=
-=3D"white-space: nowrap; padding: 0 40px 0 40px; background: #232E3F; borde=
-r: 2px solid #232E3F; font-family: Arial, 'Open Sans', sans-serif; font-siz=
-e: 14px; mso-height-rule: exactly; line-height: 10px; text-align: center; t=
-ext-decoration: none; display: block; border-radius: 3px; padding: 15px;">
-                                                                    <span s=
-tyle=3D"color: #ffffff; font-size: 14px; font-weight: 700;">Ver an=C3=BAnci=
-o</span>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                                                           =
-         </table>
-                                    </td>
-                                </tr>
-                               =20
-                                <tr>
-                                    <td>
-                                        <table role=3D"presentation" cellsp=
-acing=3D"0" cellpadding=3D"0" border=3D"0" align=3D"center" style=3D"width:=
- 100%; background-color: #f8f8f8;">
-                                            <tr>
-                                                <td style=3D"padding: 16px =
-0 16px 16px;">
-                                                    <div>
-                                                        <div style=3D"font-=
-weight: 700; font-size: 14px; color: #212121; padding: 0 0 8px 0; line-heig=
-ht: 19.07px;">A sua pesquisa guardada</div>
-                                                        <div style=3D"font-=
-weight: 400; font-size: 12px; color: #212121; line-height: 13.8px;">
-                                                            <!-- estate -->
-                                                                           =
-                                                 Moradia
-                                                           =20
+                      <td>
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="width: 100%; background-color: #f8f8f8;">
+                          <tr>
+                            <td style="padding: 16px 0 16px 16px;">
+                              <div>
+                                <div style="font-weight: 700; font-size: 14px; color: #212121; padding: 0 0 8px 0; line-height: 19.07px;">A sua pesquisa guardada</div>
+                                <div style="font-weight: 400; font-size: 12px; color: #212121; line-height: 13.8px;">
+                                  <!-- estate -->
+                                  Moradia
+                                  
 
-                                                            <!-- transactio=
-n -->
-                                                                           =
-                                                 para comprar:
-                                                           =20
-                                                            <!-- location -=
-->
-                                                                           =
-                                                 Aveiro
-                                                           =20
-                                                            <!-- rooms -->
-                                                           =20
-                                                            <!-- other para=
-meters -->
-                                                           =20
-                                                           =20
-                                                           =20
-                                                           =20
-                                                           =20
-                                                                           =
-                                                 | pre=C3=A7o m=C3=A1ximo 2=
-50000 =E2=82=AC
-                                                           =20
-                                                            <!-- extras -->
-                                                                           =
-                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td style=3D"padding: 16px =
-24px 16px 16px; text-align: right; min-width: 95px;">
-                                                    <div style=3D"display: =
-inline-block; font-weight: 600; font-size: 14px; line-height: 21px; color: =
-#232e3f;">
-                                                        <a href=3D"https://=
-www.imovirtual.com/pt/guardados/pesquisas?utm_medium=3Demail&utm_source=3Ds=
-iren&utm_campaign=3Dsaved-search-immediate" style=3D"text-decoration: none;=
- color: #232e3f;" target=3D"_blank">
-                                                            Verificar
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
+                                  <!-- transaction -->
+                                  para comprar:
+                                  
+                                  <!-- location -->
+                                  Aveiro
+                                  
+                                  <!-- rooms -->
+                                  
+                                  <!-- other parameters -->
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  | preço máximo 250000 €
+                                  
+                                  <!-- extras -->
+                                </div>
+                              </div>
+                            </td>
+                            <td style="padding: 16px 24px 16px 16px; text-align: right; min-width: 95px;">
+                              <div style="display: inline-block; font-weight: 600; font-size: 14px; line-height: 21px; color: #232e3f;">
+                                <a href="https://www.imovirtual.com/pt/guardados/pesquisas?utm_medium=email&utm_source=siren&utm_campaign=saved-search-immediate" style="text-decoration: none; color: #232e3f;" target="_blank">
+                                  Verificar
+                                </a>
+                              </div>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 24px 12px 0 12px; color:#212121;">
+                  <table role="presentation" style="width: 100%; border: none; border-spacing: 0;">
+                    <tr>
+                      <td style="padding: 8px 0 24px 0;">
+                        <p style="font-family: Arial, 'Open Sans', sans-serif; font-style: normal; font-weight: normal; font-size: 14px; line-height: 18px; color: #404041; margin: 0; text-align: center;">
+                          Está a receber notificações <strong>instantâneas</strong> quando são publicados anúncios novos que correspondem à sua pesquisa. Mude para notificações diárias se pretender recebê-las com menos frequência.
+                        </p>
+                      </td>
                     </tr>
                     <tr>
-                        <td style=3D"padding: 24px 12px 0 12px; color:#2121=
-21;">
-                            <table role=3D"presentation" style=3D"width: 10=
-0%; border: none; border-spacing: 0;">
-                                <tr>
-                                    <td style=3D"padding: 8px 0 24px 0;">
-                                        <p style=3D"font-family: Arial, 'Op=
-en Sans', sans-serif; font-style: normal; font-weight: normal; font-size: 1=
-4px; line-height: 18px; color: #404041; margin: 0; text-align: center;">
-                                                                           =
-             Est=C3=A1 a receber notifica=C3=A7=C3=B5es <strong>instant=C3=
-=A2neas</strong> quando s=C3=A3o publicados an=C3=BAncios novos que corresp=
-ondem =C3=A0 sua pesquisa. Mude para notifica=C3=A7=C3=B5es di=C3=A1rias se=
- pretender receb=C3=AA-las com menos frequ=C3=AAncia.
-                                                                           =
-         </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style=3D"padding: 0 12px 16px 12px;=
- text-align: center; margin: 0; font-family: Arial, 'Open Sans', sans-serif=
-; font-style: normal; font-weight: 400; font-size: 12px; line-height: 18px;=
-">
-                                                                           =
-     <a href=3D"https://www.imovirtual.com/pt/subscricao/atualizado/4624184=
--1727178150084-855c9565ad3e296ad7828be65caf1e96-DAILY?utm_medium=3Demail&ut=
-m_source=3Dsiren&utm_campaign=3Dsaved-search-immediate" target=3D"_blank" c=
-lass=3D"actions__link actions__link-margin" style=3D"color: #212121; displa=
-y: block;">Altere a frequ=C3=AAncia das notifica=C3=A7=C3=B5es</a>
-                                                                           =
-     <span class=3D"actions__separator" style=3D"user-select: none; display=
-: none; padding: 0 8px 0 8px;">|</span>
-                                        <a href=3D"https://www.imovirtual.c=
-om/pt/subscricao/cancelar/4624184-1727178150084-855c9565ad3e296ad7828be65ca=
-f1e96?utm_medium=3Demail&utm_source=3Dsiren&utm_campaign=3Dsaved-search-imm=
-ediate" target=3D"_blank" class=3D"actions__link actions__link-margin" styl=
-e=3D"color: #212121; display: block;">Cancelar a subscri=C3=A7=C3=A3o</a>
-                                        <span class=3D"actions__separator" =
-style=3D"user-select: none; display: none; padding: 0 8px 0 8px;">|</span>
-                                        <a href=3D"https://ajuda.imovirtual=
-.com/imovirtualhelp/s/article/termos-e-condies-para-clientes-individuais-V3=
-2IMO?utm_medium=3Demail&utm_source=3Dsiren&utm_campaign=3Dsaved-search-imme=
-diate" target=3D"_blank" class=3D"actions__link" style=3D"color: #212121; d=
-isplay: block;">Pol=C3=ADtica de Privacidade</a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
+                      <td style="padding: 0 12px 16px 12px; text-align: center; margin: 0; font-family: Arial, 'Open Sans', sans-serif; font-style: normal; font-weight: 400; font-size: 12px; line-height: 18px;">
+                        <a href="https://www.imovirtual.com/pt/subscricao/atualizado/4624184-1727178150084-855c9565ad3e296ad7828be65caf1e96-DAILY?utm_medium=email&utm_source=siren&utm_campaign=saved-search-immediate" target="_blank" class="actions__link actions__link-margin" style="color: #212121; display: block;">Altere a frequência das notificações</a>
+                        <span class="actions__separator" style="user-select: none; display: none; padding: 0 8px 0 8px;">|</span>
+                        <a href="https://www.imovirtual.com/pt/subscricao/cancelar/4624184-1727178150084-855c9565ad3e296ad7828be65caf1e96?utm_medium=email&utm_source=siren&utm_campaign=saved-search-immediate" target="_blank" class="actions__link actions__link-margin" style="color: #212121; display: block;">Cancelar a subscrição</a>
+                        <span class="actions__separator" style="user-select: none; display: none; padding: 0 8px 0 8px;">|</span>
+                        <a href="https://ajuda.imovirtual.com/imovirtualhelp/s/article/termos-e-condies-para-clientes-individuais-V32IMO?utm_medium=email&utm_source=siren&utm_campaign=saved-search-immediate" target="_blank" class="actions__link" style="color: #212121; display: block;">Política de Privacidade</a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <table role="presentation" style="width: 100%; border: none; border-spacing: 0;">
+                    <!-- Storia logo -->
+                    <tr>
+                      <td style="padding: 18px 12px 14px 12px; font-size: 12px; color: #212121; border-top: 1px solid #bdbdbd; text-align: center;">
+                        <div style="padding: 5px 8px 0 8px; display: inline-block;">
+                          <a href="https://www.imovirtual.pt?utm_medium=email&utm_source=siren&utm_campaign=saved-search-immediate" style="text-decoration: none;">
+                            <img src="https://ireland.apollo.olxcdn.com/v1/files/azqz6i1dt1yk1-MISC/image;f=png"  height="24" alt="Logo" style="display: inline-block; border: none; text-decoration: none; color: #ffffff;" class="light-mode">
+                            <img src="https://ireland.apollo.olxcdn.com/v1/files/azqz6i1dt1yk1-MISC/image;f=png" height="24" alt="Logo" style="display: none; border: none; text-decoration: none; color: #ffffff;" class="dark-mode">
+                          </a>
+                        </div>
+                      </td>
                     </tr>
                     <tr>
-                        <td>
-                            <table role=3D"presentation" style=3D"width: 10=
-0%; border: none; border-spacing: 0;">
-                                <!-- Storia logo -->
-                                <tr>
-                                    <td style=3D"padding: 18px 12px 14px 12=
-px; font-size: 12px; color: #212121; border-top: 1px solid #bdbdbd; text-al=
-ign: center;">
-                                        <div style=3D"padding: 5px 8px 0 8p=
-x; display: inline-block;">
-                                            <a href=3D"https://www.imovirtu=
-al.pt?utm_medium=3Demail&utm_source=3Dsiren&utm_campaign=3Dsaved-search-imm=
-ediate" style=3D"text-decoration: none;">
-                                                <img src=3D"https://ireland=
-.apollo.olxcdn.com/v1/files/azqz6i1dt1yk1-MISC/image;f=3Dpng"  height=3D"24=
-" alt=3D"Logo" style=3D"display: inline-block; border: none; text-decoratio=
-n: none; color: #ffffff;" class=3D"light-mode">
-                                                <img src=3D"https://ireland=
-.apollo.olxcdn.com/v1/files/azqz6i1dt1yk1-MISC/image;f=3Dpng" height=3D"24"=
- alt=3D"Logo" style=3D"display: none; border: none; text-decoration: none; =
-color: #ffffff;" class=3D"dark-mode">
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style=3D"font-weight: 700; fon=
-t-size: 14px; color: #4f5865; text-align: center;">O melhor s=C3=ADtio para=
- comprar e arrendar casa em Portugal</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style=3D"padding: 24px 0 16px 0;">
-                                        <div style=3D"font-weight: 700; fon=
-t-size: 12px; color: #232E3F; text-align: center;">Siga-nos nas redes socia=
-is</div>
-                                    </td>
-                                </tr>
-                                <!-- social media links -->
-                                <tr>
-                                    <td style=3D"text-align: center;">
-                                        <div class=3D"light-mode" style=3D"=
-display: inline-block; padding: 5px 8px 0 8px;">
-                                            <a href=3D"https://www.facebook=
-.com/Imovirtual/" target=3D"_blank" style=3D"text-decoration: none; margin-=
-right: 11px;">
-                                                <img src=3D"https://ireland=
-.apollo.olxcdn.com/v1/files/b9hot8o9hdj93-MISC/image;f=3Dpng" width=3D"24" =
-height=3D"24" alt=3D"social link">
-                                            </a>
-                                            <a href=3D"https://www.youtube.=
-com/imovirtual_pt/" target=3D"_blank" style=3D"text-decoration: none; margi=
-n-right: 11px;">
-                                                <img src=3D"https://ireland=
-.apollo.olxcdn.com/v1/files/rw2macopy9jk1-MISC/image;f=3Dpng" width=3D"24" =
-height=3D"24" alt=3D"social link">
-                                            </a>
-                                            <a href=3D"https://www.instagra=
-m.com/imovirtual/" target=3D"_blank" style=3D"text-decoration: none; margin=
--right: 11px;">
-                                                <img src=3D"https://ireland=
-.apollo.olxcdn.com/v1/files/ze8ijk7s8osr3-MISC/image;f=3Dpng" width=3D"24" =
-height=3D"24" alt=3D"social link">
-                                            </a>
-                                            <a href=3D"https://www.linkedin=
-.com/company/imovirtual/" target=3D"_blank" style=3D"text-decoration: none;=
-">
-                                                <img src=3D"https://ireland=
-.apollo.olxcdn.com/v1/files/6b6u80oz70933-MISC/image;f=3Dpng" width=3D"24" =
-height=3D"24" alt=3D"social link">
-                                            </a>
-                                        </div>
-                                        <div class=3D"dark-mode" style=3D"d=
-isplay: none; padding: 5px 8px 0 8px;">
-                                            <a href=3D"https://www.facebook=
-.com/Imovirtual/" target=3D"_blank" style=3D"text-decoration: none; margin-=
-right: 11px;">
-                                                <img src=3D"https://ireland=
-.apollo.olxcdn.com/v1/files/u7f7p020f81z-MISC/image;f=3Dpng" width=3D"24" h=
-eight=3D"24" alt=3D"social link">
-                                            </a>
-                                            <a href=3D"https://www.youtube.=
-com/imovirtual_pt/" target=3D"_blank" style=3D"text-decoration: none; margi=
-n-right: 11px;">
-                                                <img src=3D"https://ireland=
-.apollo.olxcdn.com/v1/files/w2xs2rqy9xu91-MISC/image;f=3Dpng" width=3D"24" =
-height=3D"24" alt=3D"social link">
-                                            </a>
-                                            <a href=3D"https://www.instagra=
-m.com/imovirtual/" target=3D"_blank" style=3D"text-decoration: none; margin=
--right: 11px;">
-                                                <img src=3D"https://ireland=
-.apollo.olxcdn.com/v1/files/ivwq3wutzose-MISC/image;f=3Dpng" width=3D"24" h=
-eight=3D"24" alt=3D"social link">
-                                            </a>
-                                            <a href=3D"https://www.linkedin=
-.com/company/imovirtual/" target=3D"_blank" style=3D"text-decoration: none;=
-">
-                                                <img src=3D"https://ireland=
-.apollo.olxcdn.com/v1/files/6b6u80oz70933-MISC/image;f=3Dpng" width=3D"24" =
-height=3D"24" alt=3D"social link">
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
+                      <td>
+                        <div style="font-weight: 700; font-size: 14px; color: #4f5865; text-align: center;">O melhor sítio para comprar e arrendar casa em Portugal</div>
+                      </td>
                     </tr>
                     <tr>
-                        <td>
-                            <hr style=3D"margin: 24px; border: none; border=
--bottom: 1px solid #bdbdbd;">
-                        </td>
+                      <td style="padding: 24px 0 16px 0;">
+                        <div style="font-weight: 700; font-size: 12px; color: #232E3F; text-align: center;">Siga-nos nas redes sociais</div>
+                      </td>
+                    </tr>
+                    <!-- social media links -->
+                    <tr>
+                      <td style="text-align: center;">
+                        <div class="light-mode" style="display: inline-block; padding: 5px 8px 0 8px;">
+                          <a href="https://www.facebook.com/Imovirtual/" target="_blank" style="text-decoration: none; margin-right: 11px;">
+                            <img src="https://ireland.apollo.olxcdn.com/v1/files/b9hot8o9hdj93-MISC/image;f=png" width="24" height="24" alt="social link">
+                          </a>
+                          <a href="https://www.youtube.com/imovirtual_pt/" target="_blank" style="text-decoration: none; margin-right: 11px;">
+                            <img src="https://ireland.apollo.olxcdn.com/v1/files/rw2macopy9jk1-MISC/image;f=png" width="24" height="24" alt="social link">
+                          </a>
+                          <a href="https://www.instagram.com/imovirtual/" target="_blank" style="text-decoration: none; margin-right: 11px;">
+                            <img src="https://ireland.apollo.olxcdn.com/v1/files/ze8ijk7s8osr3-MISC/image;f=png" width="24" height="24" alt="social link">
+                          </a>
+                          <a href="https://www.linkedin.com/company/imovirtual/" target="_blank" style="text-decoration: none;">
+                            <img src="https://ireland.apollo.olxcdn.com/v1/files/6b6u80oz70933-MISC/image;f=png" width="24" height="24" alt="social link">
+                          </a>
+                        </div>
+                        <div class="dark-mode" style="display: none; padding: 5px 8px 0 8px;">
+                          <a href="https://www.facebook.com/Imovirtual/" target="_blank" style="text-decoration: none; margin-right: 11px;">
+                            <img src="https://ireland.apollo.olxcdn.com/v1/files/u7f7p020f81z-MISC/image;f=png" width="24" height="24" alt="social link">
+                          </a>
+                          <a href="https://www.youtube.com/imovirtual_pt/" target="_blank" style="text-decoration: none; margin-right: 11px;">
+                            <img src="https://ireland.apollo.olxcdn.com/v1/files/w2xs2rqy9xu91-MISC/image;f=png" width="24" height="24" alt="social link">
+                          </a>
+                          <a href="https://www.instagram.com/imovirtual/" target="_blank" style="text-decoration: none; margin-right: 11px;">
+                            <img src="https://ireland.apollo.olxcdn.com/v1/files/ivwq3wutzose-MISC/image;f=png" width="24" height="24" alt="social link">
+                          </a>
+                          <a href="https://www.linkedin.com/company/imovirtual/" target="_blank" style="text-decoration: none;">
+                            <img src="https://ireland.apollo.olxcdn.com/v1/files/6b6u80oz70933-MISC/image;f=png" width="24" height="24" alt="social link">
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <hr style="margin: 24px; border: none; border-bottom: 1px solid #bdbdbd;">
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 0 12px 0 12px; font-size: 12px; color: #212121;">
+                  <table role="presentation" style="width: 100%; border: none; border-spacing: 0;">
+                    <tr>
+                      <td>
+                        <div style="font-weight: 400; font-size: 10px; color: #757575; text-align: center;">
+                          O responsável pelo tratamento dos dados é a OLX PORTUGAL, S.A., com sede no Edifício Atrium Saldanha, Praça Duque de Saldanha, n.º 1, piso 6, 1050-094 Lisboa, registada junto da Conservatória de Registo Comercial de Lisboa sob o n.º 508069491, com o capital social de € 360.000,00.
+                        </div>
+                      </td>
                     </tr>
                     <tr>
-                        <td style=3D"padding: 0 12px 0 12px; font-size: 12p=
-x; color: #212121;">
-                            <table role=3D"presentation" style=3D"width: 10=
-0%; border: none; border-spacing: 0;">
-                                <tr>
-                                    <td>
-                                        <div style=3D"font-weight: 400; fon=
-t-size: 10px; color: #757575; text-align: center;">
-                                            O respons=C3=A1vel pelo tratame=
-nto dos dados =C3=A9 a OLX PORTUGAL, S.A., com sede no Edif=C3=ADcio Atrium=
- Saldanha, Pra=C3=A7a Duque de Saldanha, n.=C2=BA 1, piso 6, 1050-094 Lisbo=
-a, registada junto da Conservat=C3=B3ria de Registo Comercial de Lisboa sob=
- o n.=C2=BA 508069491, com o capital social de =E2=82=AC 360.000,00.
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style=3D"padding: 24px 0 8px 0;">
-                                        <p style=3D"margin: 0; font-family:=
- Arial, 'Open Sans', sans-serif; font-style: normal; font-weight: normal; f=
-ont-size: 12px; line-height: 18px; color: #212121; text-align: center;">
-                                            <a href=3D"https://ajuda.imovir=
-tual.com/imovirtualhelp/s/contactsupport?utm_medium=3Demail&utm_source=3Dsi=
-ren&utm_campaign=3Dsaved-search-immediate" style=3D"color: #232e3f; text-de=
-coration: underline;">Contacte-nos</a>
-                                            se tiver d=C3=BAvidas ou sugest=
-=C3=B5es.
-                                        </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style=3D"padding: 0 12px 30px 12px;=
- font-size: 12px; color: #404041; text-align: center; line-height: normal; =
-font-weight: 400;">
-                                        Esta mensagem foi enviada automatic=
-amente. Por favor, n=C3=A3o responda a ela.
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
+                      <td style="padding: 24px 0 8px 0;">
+                        <p style="margin: 0; font-family: Arial, 'Open Sans', sans-serif; font-style: normal; font-weight: normal; font-size: 12px; line-height: 18px; color: #212121; text-align: center;">
+                          <a href="https://ajuda.imovirtual.com/imovirtualhelp/s/contactsupport?utm_medium=email&utm_source=siren&utm_campaign=saved-search-immediate" style="color: #232e3f; text-decoration: underline;">Contacte-nos</a>
+                          se tiver dúvidas ou sugestões.
+                        </p>
+                      </td>
                     </tr>
-                </table>
-            </td>
+                    <tr>
+                      <td style="padding: 0 12px 30px 12px; font-size: 12px; color: #404041; text-align: center; line-height: normal; font-weight: 400;">
+                        Esta mensagem foi enviada automaticamente. Por favor, não responda a ela.
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
         </tr>
-    </table>
-</div>
-<img alt=3D"" src=3D"https://ty5gwwjs.r.eu-west-1.awstrack.me/I0/0102019224=
-790235-d16e2dcf-2ab7-4950-9ab0-ea349eef6328-000000/S2PGhlAJ25Vlysih5rQD-pZk=
-BBE=3D393" style=3D"display: none; width: 1px; height: 1px;">
-</body>
+      </table>
+    </div>
+    <img alt="" src="https://ty5gwwjs.r.eu-west-1.awstrack.me/I0/0102019224790235-d16e2dcf-2ab7-4950-9ab0-ea349eef6328-000000/S2PGhlAJ25Vlysih5rQD-pZkBBE=393" style="display: none; width: 1px; height: 1px;">
+  </body>
 </html>

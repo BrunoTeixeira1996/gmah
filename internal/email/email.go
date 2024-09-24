@@ -68,11 +68,16 @@ func GetLinkFromSource(source string, html string, hrefSlice *[]string) error {
 		if err := ExtractLinks(html, "https://casa.sapo.pt/detalhes", hrefSlice); err != nil {
 			return err
 		}
+	case "Imovirtual":
+		if err := ExtractLinks(html, "anuncio", hrefSlice); err != nil {
+			return err
+		}
 	}
 	return nil
 }
 
 // Function that extracts the snippet from the HTML itself
+// it cuts from the startCut until the finalCut and grab the content of a tag inside that cut
 func ExtractSnippet(html string, startCut string, finalCut string, tag string, source string) (string, error) {
 	var cleanedString string
 
@@ -106,6 +111,8 @@ func ExtractSnippet(html string, startCut string, finalCut string, tag string, s
 		precoMatches := precoRegex.FindStringSubmatch(output)
 		estadoMatches := estadoRegex.FindStringSubmatch(output)
 		cleanedString = fmt.Sprintf("Para: %s - Preço: %s - Estado: %s", paraMatches[1], precoMatches[1], estadoMatches[1])
+	case "Imovirtual":
+		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(output, ""))
 	}
 
 	if cleanedString == "" {
@@ -131,6 +138,11 @@ func GetSnippetFromSource(source string, html string, snippet *string) error {
 		}
 	case "Casa Sapo":
 		*snippet, err = ExtractSnippet(html, "font-size: 13px; color: #777777; font-family: Arial, Helvetica, sans-serif; padding: 2px 0;", "text-align: center; margin: 0 0 30px 0; font-family: Arial, Helvetica, sans-serif", "span", source)
+		if err != nil {
+			return err
+		}
+	case "Imovirtual":
+		*snippet, err = ExtractSnippet(html, `<td style="padding-bottom: 8px;">`, "</td>", "h2", source)
 		if err != nil {
 			return err
 		}
