@@ -22,6 +22,7 @@ var supportedWebsites = []string{
 	"Imovirtual",
 	"Supercasa",
 	"Casasapo",
+	"CasaYes",
 }
 
 // Handles GET to check demand
@@ -146,23 +147,32 @@ func main() {
 	// Starts cronjon
 	runCh := make(chan struct{})
 	go func() {
-		// Run forever, trigger a run at 18:00 every day.
+		// Run forever, trigger a run at 23:59 every day.
 		for {
 			now := time.Now()
-			runToday := now.Hour() < 18
+			runToday := now.Hour() < 23 || (now.Hour() == 23 && now.Minute() < 59)
 			today := now.Day()
 			log.Printf("now = %v, runToday = %v", now, runToday)
+
 			for {
 				if time.Now().Day() != today {
 					log.Println("Day changed, re-evaluate whether to run today")
 					break
 				}
 
-				nextHour := time.Now().Truncate(time.Hour).Add(1 * time.Hour)
-				//log.Printf("today = %d, runToday = %v, next hour: %v", today, runToday, nextHour)
-				time.Sleep(time.Until(nextHour))
+				// Calculate the next scheduled time (23:59)
+				nextRun := time.Date(now.Year(), now.Month(), now.Day(), 23, 59, 0, 0, now.Location())
 
-				if time.Now().Hour() >= 18 && runToday {
+				// If we are already past 23:59 today, schedule for tomorrow
+				if now.After(nextRun) {
+					nextRun = nextRun.Add(24 * time.Hour)
+				}
+
+				// Sleep until the next run time
+				time.Sleep(time.Until(nextRun))
+
+				// Check if it's time to run the job
+				if time.Now().Hour() == 23 && time.Now().Minute() == 59 && runToday {
 					runToday = false
 					runCh <- struct{}{}
 				}
