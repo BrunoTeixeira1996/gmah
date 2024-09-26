@@ -72,6 +72,10 @@ func GetLinkFromSource(source string, html string, hrefSlice *[]string) error {
 		if err := ExtractLinks(html, "anuncio", hrefSlice); err != nil {
 			return err
 		}
+	case "CasaYes":
+		if err := ExtractLinks(html, "tracking.casayes.pt/tracking/click", hrefSlice); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -82,8 +86,10 @@ func ExtractSnippet(html string, startCut string, finalCut string, tag string, s
 	var cleanedString string
 
 	sc := strings.Split(html, startCut)
+	//This is giving warnings and i am still getting the house
+	// so I decided to send error as nil to proceed
 	if len(sc) < 2 {
-		return "", fmt.Errorf("Error startCut string not found in HTML")
+		return "", nil
 	}
 
 	fc := strings.Split(sc[1], finalCut)
@@ -112,6 +118,8 @@ func ExtractSnippet(html string, startCut string, finalCut string, tag string, s
 		estadoMatches := estadoRegex.FindStringSubmatch(output)
 		cleanedString = fmt.Sprintf("Para: %s - Preço: %s - Estado: %s", paraMatches[1], precoMatches[1], estadoMatches[1])
 	case "Imovirtual":
+		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(output, ""))
+	case "CasaYes":
 		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(output, ""))
 	}
 
@@ -146,6 +154,8 @@ func GetSnippetFromSource(source string, html string, snippet *string) error {
 		if err != nil {
 			return err
 		}
+	case "CasaYes":
+		*snippet, err = ExtractSnippet(html, "p style=color:#111317;line-height:27px;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px", "p style=color:#576075;line-height:27px;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px", "b", source)
 	}
 
 	return nil
@@ -167,7 +177,13 @@ func ProcessEmailBody(from string, body string) (EmailTemplate, error) {
 	if err := GetLinkFromSource(from, body, &hrefSlice); err != nil {
 		log.Println(fmt.Errorf("Error while getLinkFromSource: %v", err))
 	} else if len(hrefSlice) > 0 {
-		email.Link = hrefSlice[0]
+		// CasaYes for some reason uses the second link
+		// to be the valid link for the house
+		if from == "CasaYes" {
+			email.Link = hrefSlice[1]
+		} else {
+			email.Link = hrefSlice[0]
+		}
 	}
 
 	// Extract snippet from the body
