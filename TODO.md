@@ -21,4 +21,4 @@
 - [X] Imovirtual
 - [X] Supercasa
 - [X] Casa sapo
-- [ ] CasaYes
+- [X] CasaYes
