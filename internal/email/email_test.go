@@ -44,6 +44,14 @@ func TestProcessEmailBody(t *testing.T) {
 			wantLink:    "https://www.imovirtual.com/pt/anuncio/moradia-t3-para-venda-em-anadia-ID1fxx0?utm_medium=email&utm_source=siren&utm_campaign=saved-search-immediate",
 			wantSnippet: "Moradia T3 para venda em Anadia",
 		},
+
+		{
+			name:        "casayes",
+			from:        "casayes",
+			bodyFile:    "/home/brun0/Desktop/personal/gmah/testdata/casayes.html",
+			wantLink:    "https://www.imovirtual.com/pt/anuncio/moradia-t3-para-venda-em-anadia-ID1fxx0?utm_medium=email&utm_source=siren&utm_campaign=saved-search-immediate",
+			wantSnippet: "Moradia T3 para venda em Anadia",
+		},
 	}
 
 	for _, tt := range tests {
