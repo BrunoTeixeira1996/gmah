@@ -61,8 +61,10 @@ func run(isDebug bool, emailFlag string, passwordFlag string, dump string, newMe
 	log.Printf("Got %s new messages\n", newMessagesStr)
 
 	// Notifies telegram
-	if err := requests.NotifyTelegramBot(newMessagesStr, isGokrazy, nil); err != nil {
-		log.Println("Error while notifying telegram bot: " + err.Error())
+	if !isDebug {
+		if err := requests.NotifyTelegramBot(newMessagesStr, isGokrazy, nil); err != nil {
+			log.Println("Error while notifying telegram bot: " + err.Error())
+		}
 	}
 
 	// Clean newMessages pointer
