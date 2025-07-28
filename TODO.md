@@ -11,9 +11,9 @@
 - [X] Add flag so its ok to run in a local machine or in gokrazy (https://github.com/BrunoTeixeira1996/waiw/blob/main/cmd/waiw/waiw.go#L111C1-L167C1)
 - [X] Deploy to gokrazy
 - [X] Check logs behavior in gokrazy
-- [ ] Add ability to peform lookup on demand by date
+- [X] Add ability to peform lookup on demand by date
   - The date is an old one there's probably already a link and a html so just send that
-
+- [ ] Fix  testing - make testing easier
 
 # Websites
 

@@ -229,7 +229,7 @@ func buildEmail(messages chan *imap.Message, section *imap.BodySectionName, newM
 		}
 
 		// Workaround for unwanted emails
-		if email.Subject != "Novos anúncios hoje" && email.Subject != "Imóveis da mediadora Loben" {
+		if email.Subject != "Novos anúncios hoje" && email.Subject != "Imóveis da mediadora Loben" && email.Subject != "Novos imóveis hoje" {
 			for {
 				p, err := mr.NextPart()
 				if err == io.EOF {
