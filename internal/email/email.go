@@ -73,7 +73,7 @@ func GetLinkFromSource(source string, html string, hrefSlice *[]string) error {
 			return err
 		}
 	case "CasaYes":
-		if err := ExtractLinks(html, "1818x.trk.elasticemail.com", hrefSlice); err != nil {
+		if err := ExtractLinks(html, "1818X.trk.elasticemail.com", hrefSlice); err != nil {
 			return err
 		}
 	}
@@ -120,7 +120,6 @@ func ExtractSnippet(html string, startCut string, finalCut string, tag string, s
 	case "Imovirtual":
 		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(output, ""))
 	case "CasaYes":
-		log.Println("output:", output)
 		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(output, ""))
 	}
 
