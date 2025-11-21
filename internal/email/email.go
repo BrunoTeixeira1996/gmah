@@ -103,11 +103,14 @@ func ExtractSnippet(html string, startCut string, finalCut string, tag string, s
 	}
 	output := doc.Find(tag).Text()
 
+	// [^\p{L}\p{N} ,]+
+	// this regex works for chars like ã,é,ç, ...
+
 	switch source {
 	case "idealista":
-		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(strings.Split(output, "€")[0], "")) + "€"
+		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^\p{L}\p{N} ,]+`).ReplaceAllString(strings.Split(output, "€")[0], "")) + "€"
 	case "SUPERCASA":
-		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(output, ""))
+		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^\p{L}\p{N} ,]+`).ReplaceAllString(output, ""))
 	case "Casa Sapo":
 		paraRegex := regexp.MustCompile(`Para: (Venda|Arrendar)`)
 		precoRegex := regexp.MustCompile(`Preço: (.*?€)`)
@@ -118,9 +121,9 @@ func ExtractSnippet(html string, startCut string, finalCut string, tag string, s
 		estadoMatches := estadoRegex.FindStringSubmatch(output)
 		cleanedString = fmt.Sprintf("Para: %s - Preço: %s - Estado: %s", paraMatches[1], precoMatches[1], estadoMatches[1])
 	case "Imovirtual":
-		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(output, ""))
+		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^\p{L}\p{N} ,]+`).ReplaceAllString(output, ""))
 	case "CasaYes":
-		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(output, ""))
+		cleanedString = strings.TrimSpace(regexp.MustCompile(`[^\p{L}\p{N} ,]+`).ReplaceAllString(output, ""))
 	}
 
 	if cleanedString == "" {
@@ -308,7 +311,7 @@ func ReadEmails(isDebug bool, email string, password string, newMessages *int) (
 	//isErr := false
 	go func() {
 		if err = c.Fetch(seqset, items, messages); err != nil {
-			log.Println("Fetch err:", err)
+			log.Println("Fetch err (make sure you are using the test label in gmail):", err)
 		}
 	}()
 
