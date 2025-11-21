@@ -14,6 +14,7 @@
 - [X] Add ability to peform lookup on demand by date
   - The date is an old one there's probably already a link and a html so just send that
 - [ ] Fix  testing - make testing easier
+  - Fix Casa Sapo 
 
 # Websites
 
