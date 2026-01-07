@@ -11,10 +11,10 @@ import (
 // Notifies telegram bot with link for the current day
 func NotifyTelegramBot(newMessages string, isGokrazy bool, err error) error {
 	var link string
-	url := "http://192.168.30.21:8000/gmah"
+	url := "http://bot.lan:8000/gmah"
 
 	if isGokrazy {
-		link = "http://192.168.30.12:9090/dump/" + time.Now().Format("2006-01-02") + "_serve.html"
+		link = "http://gmah.brun0-pi.lan:9090/dump/" + time.Now().Format("2006-01-02") + "_serve.html"
 	} else {
 		link = "http://localhost:9090/dump/" + time.Now().Format("2006-01-02") + "_serve.html"
 	}
@@ -59,8 +59,8 @@ func NotifyTelegramBot(newMessages string, isGokrazy bool, err error) error {
 // Notifies telegram bot about a specific date lookup
 // send the error in lookUp anonymous struct if any
 func NotifyTelegramBotAboutSpecificLookup(wantFileName string, date string, err error) error {
-	url := "http://192.168.30.21:8000/gmah"
-	link := "http://192.168.30.12:9090/dump/" + wantFileName
+	url := "http://bot.lan:8000/gmah"
+	link := "http://gmah.brun0-pi.lan:9090/dump/" + wantFileName
 
 	lookUp := struct {
 		Lookup string `json:"lookup"`
