@@ -14,7 +14,7 @@ func NotifyTelegramBot(newMessages string, isGokrazy bool, err error) error {
 	url := "http://bot.lan:8000/gmah"
 
 	if isGokrazy {
-		link = "http://gmah.brun0-pi.lan:9090/dump/" + time.Now().Format("2006-01-02") + "_serve.html"
+		link = "http://gmah.brun0-pi.lan/dump/" + time.Now().Format("2006-01-02") + "_serve.html"
 	} else {
 		link = "http://localhost:9090/dump/" + time.Now().Format("2006-01-02") + "_serve.html"
 	}
@@ -60,7 +60,7 @@ func NotifyTelegramBot(newMessages string, isGokrazy bool, err error) error {
 // send the error in lookUp anonymous struct if any
 func NotifyTelegramBotAboutSpecificLookup(wantFileName string, date string, err error) error {
 	url := "http://bot.lan:8000/gmah"
-	link := "http://gmah.brun0-pi.lan:9090/dump/" + wantFileName
+	link := "http://gmah.brun0-pi.lan/dump/" + wantFileName
 
 	lookUp := struct {
 		Lookup string `json:"lookup"`
